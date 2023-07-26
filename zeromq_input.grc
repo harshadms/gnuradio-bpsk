@@ -1,0 +1,162 @@
+options:
+  parameters:
+    author: harshad
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: qt_gui
+    hier_block_src_path: '.:'
+    id: zeromq_input
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Not titled yet
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: '32000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 12]
+    rotation: 0
+    state: enabled
+- name: blocks_message_debug_0
+  id: blocks_message_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    en_uvec: 'True'
+    log_level: info
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [952, 312.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_0
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\nimport pmt\nimport numpy\
+      \ as np\nfrom gnuradio import gr\n\n\nclass blk(gr.sync_block):  # other base\
+      \ classes are basic_block, decim_block, interp_block\n    \"\"\"Embedded Python\
+      \ Block example - a simple multiply const\"\"\"\n\n    def __init__(self, example_param=1.0):\
+      \  # only default arguments here\n        \"\"\"arguments to this function show\
+      \ up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n         \
+      \   self,\n            name='Embedded Python Block',   # will show up in GRC\n\
+      \            in_sig=None,\n            out_sig=None\n        )\n        # if\
+      \ an attribute with the same name as a parameter is found,\n        # a callback\
+      \ is registered (properties work, too).\n        self.example_param = example_param\n\
+      \        self.message_port_register_out(pmt.intern(\"Message\"))\n\n    def\
+      \ work(self, input_items, output_items):\n        \"\"\"example: multiply with\
+      \ constant\"\"\"\n        output_items[0][:] = input_items[0] * self.example_param\n\
+      \        return len(output_items[0])\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    example_param: '1.0'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Embedded Python Block', 'blk', [('example_param', '1.0')], [], [('Message',
+      'message', 1)], 'Embedded Python Block example - a simple multiply const', ['example_param'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [88, 516.0]
+    rotation: 0
+    state: disabled
+- name: qtgui_edit_box_msg_0
+  id: qtgui_edit_box_msg
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    gui_hint: ''
+    is_pair: 'False'
+    is_static: 'True'
+    key: ''
+    label: Input
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: string
+    value: Send
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [136, 308.0]
+    rotation: 0
+    state: enabled
+- name: zeromq_pull_msg_source_0
+  id: zeromq_pull_msg_source
+  parameters:
+    address: tcp://127.0.0.1:1234
+    affinity: ''
+    alias: ''
+    bind: 'False'
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    timeout: '100'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [608, 332.0]
+    rotation: 0
+    state: enabled
+- name: zeromq_push_msg_sink_0
+  id: zeromq_push_msg_sink
+  parameters:
+    address: tcp://127.0.0.1:1234
+    affinity: ''
+    alias: ''
+    bind: 'True'
+    comment: ''
+    timeout: '100'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [424, 332.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [epy_block_0, Message, zeromq_push_msg_sink_0, in]
+- [qtgui_edit_box_msg_0, msg, zeromq_push_msg_sink_0, in]
+- [zeromq_pull_msg_source_0, out, blocks_message_debug_0, print]
+
+metadata:
+  file_format: 1
+  grc_version: v3.11.0.0git-489-g76831245
