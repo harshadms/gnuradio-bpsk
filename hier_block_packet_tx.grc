@@ -158,7 +158,7 @@ blocks:
     length_tag_name: packet_len
     maxoutbuf: '0'
     minoutbuf: '0'
-    post_padding: filt_delay
+    post_padding: filt_delay*10
     pre_padding: '0'
     type: complex
     window: firdes.window(window.WIN_HANN, 20, 0)
@@ -310,7 +310,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [312, 172.0]
+    coordinate: [296, 172.0]
     rotation: 0
     state: enabled
 - name: hdr_const

@@ -44,7 +44,7 @@ blocks:
     rot_sym: '2'
     soft_dec_lut: '''auto'''
     sym_map: digital.psk_2()[1]
-    type: calcdist
+    type: bpsk
   states:
     bus_sink: false
     bus_source: false
@@ -63,12 +63,12 @@ blocks:
     rot_sym: '2'
     soft_dec_lut: '''auto'''
     sym_map: digital.psk_2()[1]
-    type: calcdist
+    type: bpsk
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [400, 11]
+    coordinate: [520, 52.0]
     rotation: 0
     state: enabled
 - name: Const_PLD
@@ -87,7 +87,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [560, 11]
+    coordinate: [648, 12.0]
     rotation: 0
     state: disabled
 - name: amp
@@ -124,27 +124,6 @@ blocks:
     rotation: 0
     state: enabled
 - name: enc
-  id: variable_cc_encoder_def
-  parameters:
-    comment: ''
-    dim1: '1'
-    dim2: '1'
-    framebits: 1500*8
-    k: k
-    mode: fec.CC_TERMINATED
-    ndim: '0'
-    padding: 'False'
-    polys: polys
-    rate: rate
-    state_start: '0'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [216, 467]
-    rotation: 0
-    state: enabled
-- name: enc
   id: variable_dummy_encoder_def
   parameters:
     comment: ''
@@ -175,13 +154,34 @@ blocks:
     coordinate: [16, 547]
     rotation: 0
     state: disabled
+- name: enc
+  id: variable_cc_encoder_def
+  parameters:
+    comment: ''
+    dim1: '1'
+    dim2: '1'
+    framebits: '8000'
+    k: k
+    mode: fec.CC_TERMINATED
+    ndim: '0'
+    padding: 'False'
+    polys: polys
+    rate: rate
+    state_start: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [224, 460.0]
+    rotation: 0
+    state: enabled
 - name: enc_hdr
   id: variable_dummy_encoder_def
   parameters:
     comment: ''
     dim1: '1'
     dim2: '1'
-    framebits: '8000'
+    framebits: hdr_format.header_nbits()
     ndim: '0'
   states:
     bus_sink: false
@@ -202,7 +202,7 @@ blocks:
     start: 50e6
     step: 500e3
     stop: 3e9
-    value: 483e6-300
+    value: 433.6e6
     widget: counter_slider
   states:
     bus_sink: false
@@ -243,7 +243,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [752, 14]
+    coordinate: [904, 644.0]
     rotation: 0
     state: disabled
 - name: hdr_format
@@ -256,7 +256,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [752, 85]
+    coordinate: [744, 108.0]
     rotation: 0
     state: enabled
 - name: k
@@ -393,9 +393,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [952, 280.0]
+    coordinate: [920, 344.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_message_strobe_0
   id: blocks_message_strobe
   parameters:
@@ -449,7 +449,7 @@ blocks:
     bus_structure: null
     coordinate: [1472, 275]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: packet_tx_0
   id: packet_tx
   parameters:
@@ -470,7 +470,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [528, 212.0]
+    coordinate: [496, 212.0]
     rotation: 0
     state: enabled
 - name: pdu_random_pdu_0
@@ -489,7 +489,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [240, 236.0]
+    coordinate: [264, 148.0]
     rotation: 0
     state: enabled
 - name: qtgui_const_sink_x_0
@@ -581,7 +581,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1264, 475]
+    coordinate: [1264, 532.0]
     rotation: 0
     state: enabled
 - name: qtgui_freq_sink_x_0
@@ -865,7 +865,7 @@ blocks:
     bw7: '0'
     bw8: '0'
     bw9: '0'
-    center_freq0: uhd.tune_request(freq, samp_rate/2.0)
+    center_freq0: freq
     center_freq1: '0'
     center_freq10: '0'
     center_freq11: '0'
@@ -897,8 +897,8 @@ blocks:
     center_freq7: '0'
     center_freq8: '0'
     center_freq9: '0'
-    clock_rate: '0.0'
-    clock_source0: gpsdo
+    clock_rate: 0e0
+    clock_source0: ''
     clock_source1: ''
     clock_source2: ''
     clock_source3: ''
@@ -908,7 +908,7 @@ blocks:
     clock_source7: ''
     comment: ''
     dev_addr: '""'
-    dev_args: '""'
+    dev_args: '"serial=31BADAB"'
     gain0: gain
     gain1: '0'
     gain10: '0'
@@ -1056,8 +1056,8 @@ blocks:
     start_time: '-1.0'
     stream_args: ''
     stream_chans: '[]'
-    sync: sync
-    time_source0: gpsdo
+    sync: pc_clock
+    time_source0: ''
     time_source1: ''
     time_source2: ''
     time_source3: ''
@@ -1070,9 +1070,47 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1264, 99]
+    coordinate: [1280, 100.0]
     rotation: 0
     state: disabled
+- name: zeromq_pull_msg_source_0
+  id: zeromq_pull_msg_source
+  parameters:
+    address: tcp://127.0.0.1:1234
+    affinity: ''
+    alias: ''
+    bind: 'False'
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    timeout: '100'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [40, 364.0]
+    rotation: 0
+    state: disabled
+- name: zeromq_push_sink_0
+  id: zeromq_push_sink
+  parameters:
+    address: tcp://127.0.0.1:1235
+    affinity: ''
+    alias: ''
+    bind: 'True'
+    comment: ''
+    hwm: '-1'
+    pass_tags: 'False'
+    timeout: '100'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1304, 188.0]
+    rotation: 0
+    state: enabled
 
 connections:
 - [blocks_message_strobe_0, strobe, pdu_random_pdu_0, generate]
@@ -1081,9 +1119,11 @@ connections:
 - [blocks_multiply_const_vxx_0, '0', qtgui_freq_sink_x_0, '0']
 - [blocks_multiply_const_vxx_0, '0', qtgui_time_sink_x_1, '0']
 - [blocks_multiply_const_vxx_0, '0', uhd_usrp_sink_0, '0']
+- [blocks_multiply_const_vxx_0, '0', zeromq_push_sink_0, '0']
 - [packet_tx_0, '0', blocks_multiply_const_vxx_0, '0']
-- [packet_tx_0, postcrc, blocks_message_debug_0, print_pdu]
+- [packet_tx_0, postcrc, blocks_message_debug_0, print]
 - [pdu_random_pdu_0, pdus, packet_tx_0, in]
+- [zeromq_pull_msg_source_0, out, packet_tx_0, in]
 
 metadata:
   file_format: 1

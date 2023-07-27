@@ -68,7 +68,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [744, 484.0]
+    coordinate: [216, 612.0]
     rotation: 0
     state: enabled
 - name: nfilts
@@ -92,7 +92,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [728, 692.0]
+    coordinate: [200, 820.0]
     rotation: 0
     state: enabled
 - name: preamble_dummy
@@ -106,7 +106,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [560, 580.0]
+    coordinate: [32, 708.0]
     rotation: 0
     state: enabled
 - name: preamble_rep
@@ -121,7 +121,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [728, 580.0]
+    coordinate: [200, 708.0]
     rotation: 0
     state: enabled
 - name: preamble_select
@@ -133,7 +133,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [560, 692.0]
+    coordinate: [32, 820.0]
     rotation: 0
     state: enabled
 - name: rxmod
@@ -145,7 +145,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [560, 516.0]
+    coordinate: [32, 644.0]
     rotation: 0
     state: enabled
 - name: blocks_multiply_by_tag_value_cc_0
@@ -181,7 +181,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1320, 496.0]
+    coordinate: [1424, 544.0]
     rotation: 180
     state: enabled
 - name: digital_constellation_soft_decoder_cf_0
@@ -197,7 +197,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1440, 356.0]
+    coordinate: [1648, 364.0]
     rotation: 0
     state: enabled
 - name: digital_constellation_soft_decoder_cf_0_0
@@ -213,7 +213,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1424, 196.0]
+    coordinate: [1648, 180.0]
     rotation: 0
     state: enabled
 - name: digital_corr_est_cc_0
@@ -251,7 +251,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1232, 200.0]
+    coordinate: [1336, 184.0]
     rotation: 0
     state: enabled
 - name: digital_costas_loop_cc_0_0_0
@@ -269,7 +269,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1232, 360.0]
+    coordinate: [1344, 368.0]
     rotation: 0
     state: enabled
 - name: digital_crc32_async_bb_0
@@ -285,7 +285,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1680, 580.0]
+    coordinate: [1656, 716.0]
     rotation: 0
     state: enabled
 - name: digital_header_payload_demux_0
@@ -311,7 +311,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [856, 244.0]
+    coordinate: [944, 244.0]
     rotation: 0
     state: enabled
 - name: digital_pfb_clock_sync_xxx_0
@@ -334,7 +334,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [568, 276.0]
+    coordinate: [576, 276.0]
     rotation: 0
     state: enabled
 - name: digital_protocol_parser_b_0
@@ -350,7 +350,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [856, 140.0]
+    coordinate: [984, 508.0]
     rotation: 180
     state: enabled
 - name: eb
@@ -386,7 +386,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1440, 572.0]
+    coordinate: [1416, 708.0]
     rotation: 0
     state: enabled
 - name: fec_generic_decoder_0
@@ -404,7 +404,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1424, 140.0]
+    coordinate: [1600, 100.0]
     rotation: 180
     state: enabled
 - name: hdr_const
@@ -475,7 +475,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1840, 580.0]
+    coordinate: [1848, 716.0]
     rotation: 0
     state: enabled
 - name: pad_sink_1
@@ -493,7 +493,25 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1680, 628.0]
+    coordinate: [1656, 764.0]
+    rotation: 0
+    state: enabled
+- name: pad_sink_1_0
+  id: pad_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    label: proto_parse
+    num_streams: '1'
+    optional: 'True'
+    type: message
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [936, 604.0]
     rotation: 0
     state: enabled
 - name: pad_sink_2
@@ -511,7 +529,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1024, 196.0]
+    coordinate: [1568, 260.0]
     rotation: 180
     state: enabled
 - name: pad_sink_3
@@ -529,7 +547,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1024, 420.0]
+    coordinate: [1016, 420.0]
     rotation: 180
     state: enabled
 - name: pad_sink_3_0
@@ -547,7 +565,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1456, 308.0]
+    coordinate: [1648, 316.0]
     rotation: 0
     state: enabled
 - name: pad_sink_5
@@ -620,7 +638,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1200, 580.0]
+    coordinate: [1176, 716.0]
     rotation: 0
     state: enabled
 - name: pld_const
@@ -702,16 +720,17 @@ connections:
 - [digital_corr_est_cc_0, '0', blocks_multiply_by_tag_value_cc_0, '0']
 - [digital_corr_est_cc_0, '1', pad_sink_7, '0']
 - [digital_costas_loop_cc_0_0, '0', digital_constellation_soft_decoder_cf_0_0, '0']
+- [digital_costas_loop_cc_0_0, '0', pad_sink_2, '0']
 - [digital_costas_loop_cc_0_0_0, '0', digital_constellation_soft_decoder_cf_0, '0']
 - [digital_costas_loop_cc_0_0_0, '0', pad_sink_3_0, '0']
 - [digital_crc32_async_bb_0, out, pad_sink_0, in]
 - [digital_header_payload_demux_0, '0', digital_costas_loop_cc_0_0, '0']
-- [digital_header_payload_demux_0, '0', pad_sink_2, '0']
 - [digital_header_payload_demux_0, '1', digital_costas_loop_cc_0_0_0, '0']
 - [digital_header_payload_demux_0, '1', pad_sink_3, '0']
 - [digital_pfb_clock_sync_xxx_0, '0', digital_header_payload_demux_0, '0']
 - [digital_pfb_clock_sync_xxx_0, '0', pad_sink_5, '0']
 - [digital_protocol_parser_b_0, info, digital_header_payload_demux_0, header_data]
+- [digital_protocol_parser_b_0, info, pad_sink_1_0, in]
 - [fec_async_decoder_0, out, digital_crc32_async_bb_0, in]
 - [fec_async_decoder_0, out, pad_sink_1, in]
 - [fec_generic_decoder_0, '0', digital_protocol_parser_b_0, '0']

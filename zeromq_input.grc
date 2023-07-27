@@ -11,7 +11,7 @@ options:
     gen_linking: dynamic
     generate_options: no_gui
     hier_block_src_path: '.:'
-    id: zeromq_rx
+    id: zeromq_input
     max_nouts: '0'
     output_language: python
     placement: (0,0)
@@ -57,7 +57,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [360, 256.0]
+    coordinate: [432, 288.0]
     rotation: 0
     state: enabled
 - name: zeromq_pull_msg_source_0
@@ -75,7 +75,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [32, 276.0]
+    coordinate: [48, 308.0]
     rotation: 0
     state: enabled
 
