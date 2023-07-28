@@ -30,7 +30,6 @@ from gnuradio import zeromq
 from gnuradio.qtgui import Range, RangeWidget
 from PyQt5 import QtCore
 from packet_tx import packet_tx  # grc-generated hier_block
-import sip
 
 
 
@@ -81,13 +80,13 @@ class uhd_packet_tx(gr.top_block, Qt.QWidget):
         2, 1, digital.constellation.AMPLITUDE_NORMALIZATION).base()
         self.Const_PLD.gen_soft_dec_lut(8)
         self.tx_rrc_taps = tx_rrc_taps = firdes.root_raised_cosine(nfilts, nfilts,1.0, eb, (5*sps*nfilts))
-        self.samp_rate = samp_rate = 1000e3
+        self.tx_gain = tx_gain = 29
+        self.samp_rate = samp_rate = 1e6
         self.hdr_format = hdr_format = digital.header_format_counter(digital.packet_utils.default_access_code, 3, Const_PLD.bits_per_symbol())
-        self.gain = gain = 50
-        self.freq = freq = 433.6e6
+        self.freq = freq = 433.6
         self.enc_hdr = enc_hdr = fec.repetition_encoder_make(8000, rep)
         self.enc = enc = fec.cc_encoder_make(8000,k, rate, polys, 0, fec.CC_TERMINATED, False)
-        self.amp = amp = 0.5
+        self.amp = amp = 1.0
         self.Const_HDR = Const_HDR = digital.constellation_calcdist(digital.psk_2()[0], digital.psk_2()[1],
         2, 1, digital.constellation.AMPLITUDE_NORMALIZATION).base()
         self.Const_HDR.gen_soft_dec_lut(8)
@@ -96,176 +95,10 @@ class uhd_packet_tx(gr.top_block, Qt.QWidget):
         # Blocks
         ##################################################
 
-        self.tab0 = Qt.QTabWidget()
-        self.tab0_widget_0 = Qt.QWidget()
-        self.tab0_layout_0 = Qt.QBoxLayout(Qt.QBoxLayout.TopToBottom, self.tab0_widget_0)
-        self.tab0_grid_layout_0 = Qt.QGridLayout()
-        self.tab0_layout_0.addLayout(self.tab0_grid_layout_0)
-        self.tab0.addTab(self.tab0_widget_0, 'Time')
-        self.tab0_widget_1 = Qt.QWidget()
-        self.tab0_layout_1 = Qt.QBoxLayout(Qt.QBoxLayout.TopToBottom, self.tab0_widget_1)
-        self.tab0_grid_layout_1 = Qt.QGridLayout()
-        self.tab0_layout_1.addLayout(self.tab0_grid_layout_1)
-        self.tab0.addTab(self.tab0_widget_1, 'Freq.')
-        self.tab0_widget_2 = Qt.QWidget()
-        self.tab0_layout_2 = Qt.QBoxLayout(Qt.QBoxLayout.TopToBottom, self.tab0_widget_2)
-        self.tab0_grid_layout_2 = Qt.QGridLayout()
-        self.tab0_layout_2.addLayout(self.tab0_grid_layout_2)
-        self.tab0.addTab(self.tab0_widget_2, 'Const.')
-        self.top_grid_layout.addWidget(self.tab0, 1, 1, 1, 1)
-        for r in range(1, 2):
-            self.top_grid_layout.setRowStretch(r, 1)
-        for c in range(1, 2):
-            self.top_grid_layout.setColumnStretch(c, 1)
-        self._samp_rate_range = Range(200e3, 10e6, 200e3, 1000e3, 200)
-        self._samp_rate_win = RangeWidget(self._samp_rate_range, self.set_samp_rate, "Sample Rate", "counter_slider", float, QtCore.Qt.Horizontal)
-        self.top_grid_layout.addWidget(self._samp_rate_win, 0, 0, 1, 1)
-        for r in range(0, 1):
-            self.top_grid_layout.setRowStretch(r, 1)
-        for c in range(0, 1):
-            self.top_grid_layout.setColumnStretch(c, 1)
-        self._amp_range = Range(0, 0.9, 0.005, 0.5, 200)
-        self._amp_win = RangeWidget(self._amp_range, self.set_amp, "Amplitude", "counter_slider", float, QtCore.Qt.Horizontal)
-        self.top_layout.addWidget(self._amp_win)
-        self.zeromq_push_sink_0 = zeromq.push_sink(gr.sizeof_gr_complex, 1, 'tcp://127.0.0.1:1235', 100, False, (-1), True)
         self.zeromq_pull_msg_source_0 = zeromq.pull_msg_source('tcp://127.0.0.1:1234', 100, False)
-        self.qtgui_time_sink_x_1 = qtgui.time_sink_c(
-            2500, #size
-            1, #samp_rate
-            "", #name
-            1, #number of inputs
-            None # parent
-        )
-        self.qtgui_time_sink_x_1.set_update_time(0.10)
-        self.qtgui_time_sink_x_1.set_y_axis(-2, 2)
-
-        self.qtgui_time_sink_x_1.set_y_label('Amplitude', "")
-
-        self.qtgui_time_sink_x_1.enable_tags(True)
-        self.qtgui_time_sink_x_1.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, 'packet_len')
-        self.qtgui_time_sink_x_1.enable_autoscale(False)
-        self.qtgui_time_sink_x_1.enable_grid(False)
-        self.qtgui_time_sink_x_1.enable_axis_labels(True)
-        self.qtgui_time_sink_x_1.enable_control_panel(False)
-        self.qtgui_time_sink_x_1.enable_stem_plot(False)
-
-        self.qtgui_time_sink_x_1.disable_legend()
-
-        labels = ['', '', '', '', '',
-            '', '', '', '', '']
-        widths = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-        colors = ['blue', 'red', 'green', 'black', 'cyan',
-            'magenta', 'yellow', 'dark red', 'dark green', 'dark blue']
-        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
-            1.0, 1.0, 1.0, 1.0, 1.0]
-        styles = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-        markers = [-1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1]
-
-
-        for i in range(2):
-            if len(labels[i]) == 0:
-                if (i % 2 == 0):
-                    self.qtgui_time_sink_x_1.set_line_label(i, "Re{{Data {0}}}".format(i/2))
-                else:
-                    self.qtgui_time_sink_x_1.set_line_label(i, "Im{{Data {0}}}".format(i/2))
-            else:
-                self.qtgui_time_sink_x_1.set_line_label(i, labels[i])
-            self.qtgui_time_sink_x_1.set_line_width(i, widths[i])
-            self.qtgui_time_sink_x_1.set_line_color(i, colors[i])
-            self.qtgui_time_sink_x_1.set_line_style(i, styles[i])
-            self.qtgui_time_sink_x_1.set_line_marker(i, markers[i])
-            self.qtgui_time_sink_x_1.set_line_alpha(i, alphas[i])
-
-        self._qtgui_time_sink_x_1_win = sip.wrapinstance(self.qtgui_time_sink_x_1.qwidget(), Qt.QWidget)
-        self.tab0_layout_0.addWidget(self._qtgui_time_sink_x_1_win)
-        self.qtgui_freq_sink_x_0 = qtgui.freq_sink_c(
-            1024, #size
-            window.WIN_BLACKMAN_hARRIS, #wintype
-            0, #fc
-            1, #bw
-            "", #name
-            1,
-            None # parent
-        )
-        self.qtgui_freq_sink_x_0.set_update_time(0.10)
-        self.qtgui_freq_sink_x_0.set_y_axis((-140), 10)
-        self.qtgui_freq_sink_x_0.set_y_label('Relative Gain', 'dB')
-        self.qtgui_freq_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, 0.0, 0, "")
-        self.qtgui_freq_sink_x_0.enable_autoscale(False)
-        self.qtgui_freq_sink_x_0.enable_grid(False)
-        self.qtgui_freq_sink_x_0.set_fft_average(1.0)
-        self.qtgui_freq_sink_x_0.enable_axis_labels(True)
-        self.qtgui_freq_sink_x_0.enable_control_panel(False)
-        self.qtgui_freq_sink_x_0.set_fft_window_normalized(False)
-
-        self.qtgui_freq_sink_x_0.disable_legend()
-
-
-        labels = ['', '', '', '', '',
-            '', '', '', '', '']
-        widths = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-        colors = ["blue", "red", "green", "black", "cyan",
-            "magenta", "yellow", "dark red", "dark green", "dark blue"]
-        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
-            1.0, 1.0, 1.0, 1.0, 1.0]
-
-        for i in range(1):
-            if len(labels[i]) == 0:
-                self.qtgui_freq_sink_x_0.set_line_label(i, "Data {0}".format(i))
-            else:
-                self.qtgui_freq_sink_x_0.set_line_label(i, labels[i])
-            self.qtgui_freq_sink_x_0.set_line_width(i, widths[i])
-            self.qtgui_freq_sink_x_0.set_line_color(i, colors[i])
-            self.qtgui_freq_sink_x_0.set_line_alpha(i, alphas[i])
-
-        self._qtgui_freq_sink_x_0_win = sip.wrapinstance(self.qtgui_freq_sink_x_0.qwidget(), Qt.QWidget)
-        self.tab0_layout_1.addWidget(self._qtgui_freq_sink_x_0_win)
-        self.qtgui_const_sink_x_0 = qtgui.const_sink_c(
-            1024, #size
-            "", #name
-            1, #number of inputs
-            None # parent
-        )
-        self.qtgui_const_sink_x_0.set_update_time(0.10)
-        self.qtgui_const_sink_x_0.set_y_axis((-2), 2)
-        self.qtgui_const_sink_x_0.set_x_axis((-2), 2)
-        self.qtgui_const_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 'packet_len')
-        self.qtgui_const_sink_x_0.enable_autoscale(False)
-        self.qtgui_const_sink_x_0.enable_grid(False)
-        self.qtgui_const_sink_x_0.enable_axis_labels(True)
-
-        self.qtgui_const_sink_x_0.disable_legend()
-
-        labels = ['', '', '', '', '',
-            '', '', '', '', '']
-        widths = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-        colors = ["blue", "red", "red", "red", "red",
-            "red", "red", "red", "red", "red"]
-        styles = [0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0]
-        markers = [0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0]
-        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
-            1.0, 1.0, 1.0, 1.0, 1.0]
-
-        for i in range(1):
-            if len(labels[i]) == 0:
-                self.qtgui_const_sink_x_0.set_line_label(i, "Data {0}".format(i))
-            else:
-                self.qtgui_const_sink_x_0.set_line_label(i, labels[i])
-            self.qtgui_const_sink_x_0.set_line_width(i, widths[i])
-            self.qtgui_const_sink_x_0.set_line_color(i, colors[i])
-            self.qtgui_const_sink_x_0.set_line_style(i, styles[i])
-            self.qtgui_const_sink_x_0.set_line_marker(i, markers[i])
-            self.qtgui_const_sink_x_0.set_line_alpha(i, alphas[i])
-
-        self._qtgui_const_sink_x_0_win = sip.wrapinstance(self.qtgui_const_sink_x_0.qwidget(), Qt.QWidget)
-        self.tab0_layout_2.addWidget(self._qtgui_const_sink_x_0_win)
+        self._tx_gain_range = Range(0, 70, 0.1, 29, 200)
+        self._tx_gain_win = RangeWidget(self._tx_gain_range, self.set_tx_gain, "Tx Gain", "counter_slider", float, QtCore.Qt.Horizontal)
+        self.top_layout.addWidget(self._tx_gain_win)
         self.packet_tx_0 = packet_tx(
             hdr_const=Const_HDR,
             hdr_enc=enc_hdr,
@@ -275,32 +108,21 @@ class uhd_packet_tx(gr.top_block, Qt.QWidget):
             psf_taps=tx_rrc_taps,
             sps=sps,
         )
-        self._gain_range = Range(0, 83, 1, 50, 200)
-        self._gain_win = RangeWidget(self._gain_range, self.set_gain, "Gain", "counter_slider", float, QtCore.Qt.Horizontal)
-        self.top_grid_layout.addWidget(self._gain_win, 1, 0, 1, 1)
-        for r in range(1, 2):
-            self.top_grid_layout.setRowStretch(r, 1)
-        for c in range(0, 1):
-            self.top_grid_layout.setColumnStretch(c, 1)
-        self._freq_range = Range(50e6, 3e9, 500e3, 433.6e6, 200)
-        self._freq_win = RangeWidget(self._freq_range, self.set_freq, "Frequency", "counter_slider", float, QtCore.Qt.Horizontal)
-        self.top_grid_layout.addWidget(self._freq_win, 0, 1, 1, 1)
-        for r in range(0, 1):
-            self.top_grid_layout.setRowStretch(r, 1)
-        for c in range(1, 2):
-            self.top_grid_layout.setColumnStretch(c, 1)
-        self.blocks_multiply_const_vxx_0 = blocks.multiply_const_cc(amp)
+        self._freq_range = Range(433, 434, 0.05, 433.6, 200)
+        self._freq_win = RangeWidget(self._freq_range, self.set_freq, "Tx Freq", "counter_slider", float, QtCore.Qt.Horizontal)
+        self.top_layout.addWidget(self._freq_win)
+        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_gr_complex*1, '/tmp/bpsk_tx_debug.cfile', False)
+        self.blocks_file_sink_0.set_unbuffered(False)
+        self._amp_range = Range(0, 2, 0.01, 1.0, 200)
+        self._amp_win = RangeWidget(self._amp_range, self.set_amp, "Amplitude", "counter_slider", float, QtCore.Qt.Horizontal)
+        self.top_layout.addWidget(self._amp_win)
 
 
         ##################################################
         # Connections
         ##################################################
         self.msg_connect((self.zeromq_pull_msg_source_0, 'out'), (self.packet_tx_0, 'in'))
-        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.qtgui_const_sink_x_0, 0))
-        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.qtgui_freq_sink_x_0, 0))
-        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.qtgui_time_sink_x_1, 0))
-        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.zeromq_push_sink_0, 0))
-        self.connect((self.packet_tx_0, 0), (self.blocks_multiply_const_vxx_0, 0))
+        self.connect((self.packet_tx_0, 0), (self.blocks_file_sink_0, 0))
 
 
     def closeEvent(self, event):
@@ -371,6 +193,12 @@ class uhd_packet_tx(gr.top_block, Qt.QWidget):
         self.tx_rrc_taps = tx_rrc_taps
         self.packet_tx_0.set_psf_taps(self.tx_rrc_taps)
 
+    def get_tx_gain(self):
+        return self.tx_gain
+
+    def set_tx_gain(self, tx_gain):
+        self.tx_gain = tx_gain
+
     def get_samp_rate(self):
         return self.samp_rate
 
@@ -383,12 +211,6 @@ class uhd_packet_tx(gr.top_block, Qt.QWidget):
     def set_hdr_format(self, hdr_format):
         self.hdr_format = hdr_format
         self.packet_tx_0.set_hdr_format(self.hdr_format)
-
-    def get_gain(self):
-        return self.gain
-
-    def set_gain(self, gain):
-        self.gain = gain
 
     def get_freq(self):
         return self.freq
@@ -415,7 +237,6 @@ class uhd_packet_tx(gr.top_block, Qt.QWidget):
 
     def set_amp(self, amp):
         self.amp = amp
-        self.blocks_multiply_const_vxx_0.set_k(self.amp)
 
     def get_Const_HDR(self):
         return self.Const_HDR

@@ -272,20 +272,28 @@ blocks:
     coordinate: [1344, 368.0]
     rotation: 0
     state: enabled
-- name: digital_crc32_async_bb_0
-  id: digital_crc32_async_bb
+- name: digital_crc_check_0
+  id: digital_crc_check
   parameters:
     affinity: ''
     alias: ''
-    check: 'True'
     comment: ''
+    discard_crc: 'False'
+    final_xor: '0xFFFFFFFF'
+    initial_value: '0xFFFFFFFF'
+    input_reflected: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
+    num_bits: '32'
+    poly: '0x4C11DB7'
+    result_reflected: 'True'
+    skip_header_bytes: '0'
+    swap_endianness: 'False'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1656, 716.0]
+    coordinate: [1680, 704.0]
     rotation: 0
     state: enabled
 - name: digital_header_payload_demux_0
@@ -386,7 +394,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1416, 708.0]
+    coordinate: [1432, 708.0]
     rotation: 0
     state: enabled
 - name: fec_generic_decoder_0
@@ -475,7 +483,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1848, 716.0]
+    coordinate: [1920, 652.0]
     rotation: 0
     state: enabled
 - name: pad_sink_1
@@ -493,7 +501,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1656, 764.0]
+    coordinate: [1928, 780.0]
     rotation: 0
     state: enabled
 - name: pad_sink_1_0
@@ -723,7 +731,8 @@ connections:
 - [digital_costas_loop_cc_0_0, '0', pad_sink_2, '0']
 - [digital_costas_loop_cc_0_0_0, '0', digital_constellation_soft_decoder_cf_0, '0']
 - [digital_costas_loop_cc_0_0_0, '0', pad_sink_3_0, '0']
-- [digital_crc32_async_bb_0, out, pad_sink_0, in]
+- [digital_crc_check_0, fail, pad_sink_1, in]
+- [digital_crc_check_0, ok, pad_sink_0, in]
 - [digital_header_payload_demux_0, '0', digital_costas_loop_cc_0_0, '0']
 - [digital_header_payload_demux_0, '1', digital_costas_loop_cc_0_0_0, '0']
 - [digital_header_payload_demux_0, '1', pad_sink_3, '0']
@@ -731,8 +740,7 @@ connections:
 - [digital_pfb_clock_sync_xxx_0, '0', pad_sink_5, '0']
 - [digital_protocol_parser_b_0, info, digital_header_payload_demux_0, header_data]
 - [digital_protocol_parser_b_0, info, pad_sink_1_0, in]
-- [fec_async_decoder_0, out, digital_crc32_async_bb_0, in]
-- [fec_async_decoder_0, out, pad_sink_1, in]
+- [fec_async_decoder_0, out, digital_crc_check_0, in]
 - [fec_generic_decoder_0, '0', digital_protocol_parser_b_0, '0']
 - [pad_source_0, '0', digital_corr_est_cc_0, '0']
 - [pdu_tagged_stream_to_pdu_0, pdus, fec_async_decoder_0, in]

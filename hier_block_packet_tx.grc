@@ -158,8 +158,8 @@ blocks:
     length_tag_name: packet_len
     maxoutbuf: '0'
     minoutbuf: '0'
-    post_padding: filt_delay*10
-    pre_padding: '0'
+    post_padding: '100'
+    pre_padding: '1000'
     type: complex
     window: firdes.window(window.WIN_HANN, 20, 0)
   states:
@@ -209,20 +209,27 @@ blocks:
     coordinate: [1104, 256.0]
     rotation: 0
     state: enabled
-- name: digital_crc32_async_bb_1
-  id: digital_crc32_async_bb
+- name: digital_crc_append_0
+  id: digital_crc_append
   parameters:
     affinity: ''
     alias: ''
-    check: 'False'
     comment: ''
+    final_xor: '0xFFFFFFFF'
+    initial_value: '0xFFFFFFFF'
+    input_reflected: 'True'
     maxoutbuf: '0'
     minoutbuf: '0'
+    num_bits: '32'
+    poly: '0x4C11DB7'
+    result_reflected: 'True'
+    skip_header_bytes: '0'
+    swap_endianness: 'False'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [312, 107]
+    coordinate: [360, 108.0]
     rotation: 180
     state: enabled
 - name: digital_map_bb_1
@@ -290,7 +297,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [64, 99]
+    coordinate: [64, 100.0]
     rotation: 180
     state: enabled
 - name: fec_async_encoder_0_0
@@ -481,7 +488,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [504, 107]
+    coordinate: [784, 108.0]
     rotation: 180
     state: enabled
 - name: pdu_pdu_to_tagged_stream_0
@@ -645,15 +652,14 @@ connections:
 - [digital_burst_shaper_xx_0, '0', pfb_arb_resampler_xxx_0, '0']
 - [digital_chunks_to_symbols_xx_0, '0', mod_header, '0']
 - [digital_chunks_to_symbols_xx_0_0, '0', mod_payload, '0']
-- [digital_crc32_async_bb_1, out, fec_async_encoder_0, in]
-- [digital_crc32_async_bb_1, out, pad_sink_1, in]
+- [digital_crc_append_0, out, fec_async_encoder_0, in]
 - [digital_map_bb_1, '0', digital_chunks_to_symbols_xx_0, '0']
 - [digital_map_bb_1_0, '0', digital_chunks_to_symbols_xx_0_0, '0']
 - [digital_protocol_formatter_async_0, header, fec_async_encoder_0_0, in]
 - [digital_protocol_formatter_async_0, payload, pdu_pdu_to_tagged_stream_0, pdus]
 - [fec_async_encoder_0, out, digital_protocol_formatter_async_0, in]
 - [fec_async_encoder_0_0, out, pdu_pdu_to_tagged_stream_0_0, pdus]
-- [pad_source_0, out, digital_crc32_async_bb_1, in]
+- [pad_source_0, out, digital_crc_append_0, in]
 - [pdu_pdu_to_tagged_stream_0, '0', blocks_repack_bits_bb_0_0, '0']
 - [pdu_pdu_to_tagged_stream_0_0, '0', blocks_repack_bits_bb_0, '0']
 - [pfb_arb_resampler_xxx_0, '0', blocks_tagged_stream_multiply_length_0, '0']
