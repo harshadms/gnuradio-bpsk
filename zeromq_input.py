@@ -19,14 +19,12 @@ import numpy as np
 _debug = 0          # set to zero to turn off diagnostics
 
 # create a PUSH socket
-PROTOCOL = "tcp://"
-SERVER = "127.0.0.1"          # localhost
-PUSH_PORT = ":1234"
-PUSH_ADDR = PROTOCOL + SERVER + PUSH_PORT
+PUSH_BPSK_ADDR = "tcp://127.0.0.1:1234"
+PUSH_STATS_CMD = "tcp://127.0.0.1:1237"
 
 push_context = zmq.Context()
 push_sock = push_context.socket (zmq.PUSH)
-push_sock.bind(PUSH_ADDR)
+push_sock.bind(PUSH_BPSK_ADDR)
 
 if len(sys.argv) == 1:
     repeat = True
@@ -46,12 +44,23 @@ while 1:
     
     if ch == 'q':
         break
-
-    push_sock.send(pmt.serialize_str(pmt.cons(pmt.make_dict(), pmt.pmt_to_python.numpy_to_uvector(np.array([ord(c) for c in ch], np.uint8)))))
-    time.sleep(0.5)
     
+    
+    vec = np.array([ord(c) for c in ch], np.uint8)
+    vec = np.insert(vec, len(vec), 35)
+
+    push_sock.send(pmt.serialize_str(pmt.cons(pmt.make_dict(), pmt.pmt_to_python.numpy_to_uvector(vec))))
+    time.sleep(0.5)
     
     if not repeat and cnt >= limit:
         break
 
-#push_sock.send(pmt.serialize_str(pmt.to_pmt(tab)))
+push_sock.close()
+
+
+push_context = zmq.Context()
+push_sock = push_context.socket (zmq.PUSH)
+push_sock.bind(PUSH_STATS_CMD)
+
+# Send status report message to receiver
+push_sock.send(pmt.serialize_str(pmt.cons(pmt.make_dict(), pmt.pmt_to_python.numpy_to_uvector(np.array([np.uint8(1), np.uint8(limit)])))))
