@@ -44,31 +44,12 @@ blocks:
     rot_sym: '2'
     soft_dec_lut: '''auto'''
     sym_map: digital.psk_2()[1]
-    type: bpsk
+    type: calcdist
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [240, 11]
-    rotation: 0
-    state: enabled
-- name: Const_PLD
-  id: variable_constellation
-  parameters:
-    comment: ''
-    const_points: digital.psk_2()[0]
-    dims: '1'
-    normalization: digital.constellation.AMPLITUDE_NORMALIZATION
-    precision: '8'
-    rot_sym: '2'
-    soft_dec_lut: '''auto'''
-    sym_map: digital.psk_2()[1]
-    type: bpsk
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [520, 52.0]
+    coordinate: [424, 804.0]
     rotation: 0
     state: enabled
 - name: Const_PLD
@@ -90,11 +71,30 @@ blocks:
     coordinate: [648, 12.0]
     rotation: 0
     state: disabled
+- name: Const_PLD
+  id: variable_constellation
+  parameters:
+    comment: ''
+    const_points: digital.psk_2()[0]
+    dims: '1'
+    normalization: digital.constellation.AMPLITUDE_NORMALIZATION
+    precision: '8'
+    rot_sym: '2'
+    soft_dec_lut: '''auto'''
+    sym_map: digital.psk_2()[1]
+    type: calcdist
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [672, 804.0]
+    rotation: 0
+    state: enabled
 - name: amp
   id: variable_qtgui_range
   parameters:
     comment: ''
-    gui_hint: 1,1,1,1
+    gui_hint: ''
     label: Amplitude
     min_len: '200'
     orient: QtCore.Qt.Horizontal
@@ -108,9 +108,21 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [576, 683]
+    coordinate: [272, 524.0]
     rotation: 0
     state: enabled
+- name: amp
+  id: variable
+  parameters:
+    comment: ''
+    value: '0.5'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [800, 692.0]
+    rotation: 0
+    state: disabled
 - name: eb
   id: variable
   parameters:
@@ -120,40 +132,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [152, 75]
+    coordinate: [152, 92.0]
     rotation: 0
     state: enabled
-- name: enc
-  id: variable_dummy_encoder_def
-  parameters:
-    comment: ''
-    dim1: '1'
-    dim2: '1'
-    framebits: '8000'
-    ndim: '0'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [16, 467]
-    rotation: 0
-    state: disabled
-- name: enc
-  id: variable_repetition_encoder_def
-  parameters:
-    comment: ''
-    dim1: '1'
-    dim2: '1'
-    framebits: '8000'
-    ndim: '0'
-    rep: rep
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [16, 547]
-    rotation: 0
-    state: disabled
 - name: enc
   id: variable_cc_encoder_def
   parameters:
@@ -172,7 +153,54 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [224, 460.0]
+    coordinate: [8, 788.0]
+    rotation: 0
+    state: enabled
+- name: enc
+  id: variable_dummy_encoder_def
+  parameters:
+    comment: ''
+    dim1: '1'
+    dim2: '1'
+    framebits: '8000'
+    ndim: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 700.0]
+    rotation: 0
+    state: disabled
+- name: enc
+  id: variable_repetition_encoder_def
+  parameters:
+    comment: ''
+    dim1: '1'
+    dim2: '1'
+    framebits: '8000'
+    ndim: '0'
+    rep: rep
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [216, 772.0]
+    rotation: 0
+    state: disabled
+- name: enc_hdr
+  id: variable_repetition_encoder_def
+  parameters:
+    comment: ''
+    dim1: '1'
+    dim2: '1'
+    framebits: '8000'
+    ndim: '0'
+    rep: rep
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [216, 868.0]
     rotation: 0
     state: enabled
 - name: enc_hdr
@@ -181,15 +209,15 @@ blocks:
     comment: ''
     dim1: '1'
     dim2: '1'
-    framebits: hdr_format.header_nbits()
+    framebits: '8000'
     ndim: '0'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [440, 467]
+    coordinate: [424, 724.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: freq
   id: variable_qtgui_range
   parameters:
@@ -208,9 +236,21 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [576, 555]
+    coordinate: [16, 524.0]
     rotation: 0
     state: enabled
+- name: freq
+  id: variable
+  parameters:
+    comment: ''
+    value: 433.6e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [704, 692.0]
+    rotation: 0
+    state: disabled
 - name: gain
   id: variable_qtgui_range
   parameters:
@@ -229,21 +269,19 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [448, 683]
+    coordinate: [152, 524.0]
     rotation: 0
     state: enabled
-- name: hdr_format
-  id: variable_header_format_default
+- name: gain
+  id: variable
   parameters:
-    access_code: digital.packet_utils.default_access_code
-    bps: '1'
     comment: ''
-    threshold: '3'
+    value: '60'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [904, 644.0]
+    coordinate: [336, 692.0]
     rotation: 0
     state: disabled
 - name: hdr_format
@@ -256,9 +294,23 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [744, 108.0]
+    coordinate: [248, 156.0]
     rotation: 0
     state: enabled
+- name: hdr_format_0
+  id: variable_header_format_default
+  parameters:
+    access_code: digital.packet_utils.default_access_code
+    bps: '1'
+    comment: ''
+    threshold: '3'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1632, 532.0]
+    rotation: 0
+    state: disabled
 - name: k
   id: variable
   parameters:
@@ -268,7 +320,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [272, 651]
+    coordinate: [8, 156.0]
     rotation: 0
     state: enabled
 - name: nfilts
@@ -280,19 +332,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [80, 75]
-    rotation: 0
-    state: enabled
-- name: ntaps
-  id: variable
-  parameters:
-    comment: ''
-    value: len(tx_rrc_taps)
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1272, 11]
+    coordinate: [80, 92.0]
     rotation: 0
     state: enabled
 - name: polys
@@ -304,7 +344,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [320, 715]
+    coordinate: [152, 156.0]
     rotation: 0
     state: enabled
 - name: rate
@@ -316,7 +356,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [344, 651]
+    coordinate: [80, 156.0]
     rotation: 0
     state: enabled
 - name: rep
@@ -328,7 +368,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [248, 715]
+    coordinate: [248, 92.0]
     rotation: 0
     state: enabled
 - name: samp_rate
@@ -349,9 +389,21 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [448, 555]
+    coordinate: [408, 524.0]
     rotation: 0
     state: enabled
+- name: samp_rate
+  id: variable
+  parameters:
+    comment: ''
+    value: 2e6
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [888, 692.0]
+    rotation: 0
+    state: disabled
 - name: sps
   id: variable
   parameters:
@@ -361,7 +413,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [8, 75]
+    coordinate: [8, 92.0]
     rotation: 0
     state: enabled
 - name: tx_rrc_taps
@@ -378,9 +430,27 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [944, 11]
+    coordinate: [1000, 12.0]
     rotation: 0
     state: enabled
+- name: blocks_file_sink_0
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: /tmp/bpsk_rx.cfile
+    type: complex
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1176, 300.0]
+    rotation: 0
+    state: disabled
 - name: blocks_message_debug_0
   id: blocks_message_debug
   parameters:
@@ -393,7 +463,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [920, 344.0]
+    coordinate: [920, 400.0]
     rotation: 0
     state: disabled
 - name: blocks_message_strobe_0
@@ -412,7 +482,7 @@ blocks:
     bus_structure: null
     coordinate: [32, 252.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_multiply_const_vxx_0
   id: blocks_multiply_const_vxx
   parameters:
@@ -428,7 +498,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [952, 211]
+    coordinate: [928, 316.0]
     rotation: 0
     state: enabled
 - name: blocks_tag_debug_0
@@ -449,7 +519,7 @@ blocks:
     bus_structure: null
     coordinate: [1472, 275]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: packet_tx_0
   id: packet_tx
   parameters:
@@ -458,8 +528,7 @@ blocks:
     comment: ''
     hdr_const: Const_HDR
     hdr_enc: enc_hdr
-    hdr_format: digital.header_format_default(digital.packet_utils.default_access_code,
-      0)
+    hdr_format: hdr_format
     maxoutbuf: '0'
     minoutbuf: '0'
     pld_const: Const_PLD
@@ -470,7 +539,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [496, 212.0]
+    coordinate: [560, 316.0]
     rotation: 0
     state: enabled
 - name: pdu_random_pdu_0
@@ -489,9 +558,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [264, 148.0]
+    coordinate: [280, 236.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: qtgui_const_sink_x_0
   id: qtgui_const_sink_x
   parameters:
@@ -662,7 +731,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1264, 395]
+    coordinate: [1264, 408.0]
     rotation: 0
     state: enabled
 - name: qtgui_time_sink_x_1
@@ -759,7 +828,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1264, 315]
+    coordinate: [1272, 604.0]
     rotation: 0
     state: enabled
 - name: tab0
@@ -767,7 +836,7 @@ blocks:
   parameters:
     alias: ''
     comment: ''
-    gui_hint: 2,0,1,2
+    gui_hint: 1,1,1,1
     label0: Time
     label1: Freq.
     label10: Tab 10
@@ -793,9 +862,43 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1096, 11]
+    coordinate: [1416, 4.0]
     rotation: 0
     state: enabled
+- name: tab1
+  id: qtgui_tab_widget
+  parameters:
+    alias: ''
+    comment: ''
+    gui_hint: 1,2,1,1
+    label0: Time
+    label1: Freq.
+    label10: Tab 10
+    label11: Tab 11
+    label12: Tab 12
+    label13: Tab 13
+    label14: Tab 14
+    label15: Tab 15
+    label16: Tab 16
+    label17: Tab 17
+    label18: Tab 18
+    label19: Tab 19
+    label2: Const.
+    label3: Tab 3
+    label4: Tab 4
+    label5: Tab 5
+    label6: Tab 6
+    label7: Tab 7
+    label8: Tab 8
+    label9: Tab 9
+    num_tabs: '3'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1280, 4.0]
+    rotation: 0
+    state: disabled
 - name: uhd_usrp_sink_0
   id: uhd_usrp_sink
   parameters:
@@ -1070,7 +1173,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1280, 100.0]
+    coordinate: [1688, 148.0]
     rotation: 0
     state: disabled
 - name: zeromq_pull_msg_source_0
@@ -1088,9 +1191,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [40, 364.0]
+    coordinate: [80, 356.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: zeromq_push_sink_0
   id: zeromq_push_sink
   parameters:
@@ -1108,12 +1211,13 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1304, 188.0]
+    coordinate: [1184, 292.0]
     rotation: 0
     state: enabled
 
 connections:
 - [blocks_message_strobe_0, strobe, pdu_random_pdu_0, generate]
+- [blocks_multiply_const_vxx_0, '0', blocks_file_sink_0, '0']
 - [blocks_multiply_const_vxx_0, '0', blocks_tag_debug_0, '0']
 - [blocks_multiply_const_vxx_0, '0', qtgui_const_sink_x_0, '0']
 - [blocks_multiply_const_vxx_0, '0', qtgui_freq_sink_x_0, '0']
@@ -1121,7 +1225,6 @@ connections:
 - [blocks_multiply_const_vxx_0, '0', uhd_usrp_sink_0, '0']
 - [blocks_multiply_const_vxx_0, '0', zeromq_push_sink_0, '0']
 - [packet_tx_0, '0', blocks_multiply_const_vxx_0, '0']
-- [packet_tx_0, postcrc, blocks_message_debug_0, print]
 - [pdu_random_pdu_0, pdus, packet_tx_0, in]
 - [zeromq_pull_msg_source_0, out, packet_tx_0, in]
 

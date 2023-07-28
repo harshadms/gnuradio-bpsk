@@ -10,10 +10,10 @@
 # GNU Radio version: v3.11.0.0git-489-g76831245
 
 # zmq_PUSH_PULL_server.py
-
+import sys
 import pmt
 import zmq
-import struct
+import time
 import numpy as np
 
 _debug = 0          # set to zero to turn off diagnostics
@@ -28,11 +28,30 @@ push_context = zmq.Context()
 push_sock = push_context.socket (zmq.PUSH)
 push_sock.bind(PUSH_ADDR)
 
-while 1:
-    ch = input("Enter message: ")
+if len(sys.argv) == 1:
+    repeat = True
+    limit = 1
+else:
+    repeat = False
+    limit = int(sys.argv[1])
 
+cnt = 0
+
+while 1:
+    if not repeat:
+        ch = "Testing-123456789"
+        cnt = cnt + 1
+    else:
+        ch = input("Enter message: ")
+    
     if ch == 'q':
         break
 
     push_sock.send(pmt.serialize_str(pmt.cons(pmt.make_dict(), pmt.pmt_to_python.numpy_to_uvector(np.array([ord(c) for c in ch], np.uint8)))))
+    time.sleep(0.5)
+    
+    
+    if not repeat and cnt >= limit:
+        break
+
 #push_sock.send(pmt.serialize_str(pmt.to_pmt(tab)))
