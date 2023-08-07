@@ -34,6 +34,7 @@ else:
     limit = int(sys.argv[1])
 
 cnt = 0
+slp = 1
 
 while 1:
     if not repeat:
@@ -54,6 +55,8 @@ while 1:
     
     if not repeat and cnt >= limit:
         break
+
+    #slp = slp + 1
 
 push_sock.close()
 

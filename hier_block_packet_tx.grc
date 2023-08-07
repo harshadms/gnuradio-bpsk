@@ -42,7 +42,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [936, 444.0]
+    coordinate: [944, 444.0]
     rotation: 0
     state: enabled
 - name: nfilts
@@ -125,7 +125,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1168, 376.0]
+    coordinate: [1160, 376.0]
     rotation: 0
     state: enabled
 - name: blocks_tagged_stream_mux_0
@@ -335,7 +335,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [552, 11]
+    coordinate: [552, 12.0]
     rotation: 0
     state: enabled
 - name: hdr_enc
@@ -431,7 +431,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1488, 388.0]
+    coordinate: [1808, 388.0]
     rotation: 0
     state: enabled
 - name: pad_sink_1
@@ -449,8 +449,8 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [96, 164.0]
-    rotation: 180
+    coordinate: [480, 284.0]
+    rotation: 0
     state: enabled
 - name: pad_sink_2
   id: pad_sink
@@ -485,7 +485,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [840, 508.0]
+    coordinate: [720, 508.0]
     rotation: 0
     state: enabled
 - name: pad_source_0
@@ -675,6 +675,23 @@ blocks:
     coordinate: [1080, 11]
     rotation: 0
     state: enabled
+- name: usrp_obj
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: USRP Obj
+    short_id: ''
+    type: ''
+    value: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1632, 28.0]
+    rotation: 0
+    state: disabled
 
 connections:
 - [blocks_repack_bits_bb_0, '0', digital_map_bb_1, '0']
@@ -687,10 +704,10 @@ connections:
 - [digital_chunks_to_symbols_xx_0, '0', mod_header, '0']
 - [digital_chunks_to_symbols_xx_0_0, '0', mod_payload, '0']
 - [digital_crc_append_0, out, fec_async_encoder_0, in]
-- [digital_crc_append_0, out, pad_sink_1, in]
 - [digital_map_bb_1, '0', digital_chunks_to_symbols_xx_0, '0']
 - [digital_map_bb_1_0, '0', digital_chunks_to_symbols_xx_0_0, '0']
 - [digital_protocol_formatter_async_0, header, fec_async_encoder_0_0, in]
+- [digital_protocol_formatter_async_0, header, pad_sink_1, in]
 - [digital_protocol_formatter_async_0, payload, pdu_pdu_to_tagged_stream_0, pdus]
 - [fec_async_encoder_0, out, digital_protocol_formatter_async_0, in]
 - [fec_async_encoder_0_0, out, pdu_pdu_to_tagged_stream_0_0, pdus]
