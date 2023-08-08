@@ -37,6 +37,8 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
 
     def handle_data(self, msg):
         a = pmt.to_python(msg)
+
+        
         chars = a[1]
 
         string_ = []
@@ -62,8 +64,15 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
     
     def handle_cmd(self, msg):
         msg = pmt.to_python(msg)
-        cmd = msg[1][0]
-        test = int(msg[1][1])
+
+    def handle_cmd(self, msg):
+        msg = pmt.to_python(msg)
+        
+        try:
+            cmd = msg[1][0]
+            test = int(msg[1][1])
+        except:
+            return
 
         if cmd == 1:
             print ("Count = %d/%d" % (self.cnt, test))

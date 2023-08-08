@@ -26,6 +26,9 @@ push_context = zmq.Context()
 push_sock = push_context.socket (zmq.PUSH)
 push_sock.bind(PUSH_BPSK_ADDR)
 
+push_cmd_sock = push_context.socket (zmq.PUSH)
+push_cmd_sock.bind(PUSH_STATS_CMD)
+
 if len(sys.argv) == 1:
     repeat = True
     limit = 1
@@ -51,7 +54,12 @@ while 1:
     vec = np.insert(vec, len(vec), 35)
 
     push_sock.send(pmt.serialize_str(pmt.cons(pmt.make_dict(), pmt.pmt_to_python.numpy_to_uvector(vec))))
-    time.sleep(0.5)
+
+    time.sleep(1.55)
+    
+    push_cmd_sock.send(pmt.serialize_str(pmt.to_pmt(('reset',1))))
+
+    #time.sleep(0.5)
     
     if not repeat and cnt >= limit:
         break
@@ -60,10 +68,5 @@ while 1:
 
 push_sock.close()
 
-
-push_context = zmq.Context()
-push_sock = push_context.socket (zmq.PUSH)
-push_sock.bind(PUSH_STATS_CMD)
-
 # Send status report message to receiver
-push_sock.send(pmt.serialize_str(pmt.cons(pmt.make_dict(), pmt.pmt_to_python.numpy_to_uvector(np.array([np.uint8(1), np.uint8(limit)])))))
+push_cmd_sock.send(pmt.serialize_str(pmt.cons(pmt.make_dict(), pmt.pmt_to_python.numpy_to_uvector(np.array([np.uint8(1), np.uint8(limit)])))))
