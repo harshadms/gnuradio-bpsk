@@ -62,7 +62,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
             
             self.add_item_tag(0, self.sample_count, pmt.intern('tx_time'), pmt.to_pmt((self.tx_secs, self.tx_fracs)))
 
-            print (f"Tx time set to: {self.tx_secs + self.tx_fracs}")
+            #print (f"Tx time set to: {self.tx_secs + self.tx_fracs}")
 
             pmt_msg = pmt.to_pmt(('tx_time', self.tx_secs+self.tx_fracs))
 

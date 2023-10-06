@@ -42,7 +42,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [944, 444.0]
+    coordinate: [992, 540.0]
     rotation: 0
     state: enabled
 - name: nfilts
@@ -66,7 +66,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [840, 444.0]
+    coordinate: [888, 540.0]
     rotation: 0
     state: enabled
 - name: blocks_repack_bits_bb_0
@@ -125,7 +125,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1160, 376.0]
+    coordinate: [1208, 472.0]
     rotation: 0
     state: enabled
 - name: blocks_tagged_stream_mux_0
@@ -145,7 +145,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [320, 360.0]
+    coordinate: [368, 456.0]
     rotation: 0
     state: enabled
 - name: digital_burst_shaper_xx_0
@@ -166,7 +166,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [576, 340.0]
+    coordinate: [624, 436.0]
     rotation: 0
     state: enabled
 - name: digital_chunks_to_symbols_xx_0
@@ -431,7 +431,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1808, 388.0]
+    coordinate: [1856, 484.0]
     rotation: 0
     state: enabled
 - name: pad_sink_1
@@ -467,7 +467,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [576, 508.0]
+    coordinate: [624, 604.0]
     rotation: 0
     state: enabled
 - name: pad_sink_3
@@ -485,7 +485,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [720, 508.0]
+    coordinate: [768, 604.0]
     rotation: 0
     state: enabled
 - name: pad_source_0
@@ -577,7 +577,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [832, 348.0]
+    coordinate: [880, 444.0]
     rotation: 0
     state: enabled
 - name: pld_const
@@ -642,7 +642,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [24, 340.0]
+    coordinate: [72, 444.0]
     rotation: 0
     state: enabled
 - name: rx_mod_payload
@@ -655,7 +655,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [16, 396.0]
+    coordinate: [64, 492.0]
     rotation: 0
     state: enabled
 - name: sps
@@ -720,4 +720,4 @@ connections:
 
 metadata:
   file_format: 1
-  grc_version: v3.11.0.0git-489-g76831245
+  grc_version: 3.10.7.0

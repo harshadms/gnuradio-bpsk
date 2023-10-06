@@ -29,11 +29,11 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
 
     def work(self, input_items, output_items):
         """example: multiply with constant"""
-        time = self.usrp.get_time_now()
-        rx_time = time.get_real_secs()
+        #time = self.usrp.get_time_now()
+        #rx_time = time.get_real_secs()
         output_items[0][:] = input_items[0]
 
-        self.add_item_tag(0, self.sample_count, pmt.intern('rx_time2'), pmt.to_pmt(rx_time))
-
+        self.add_item_tag(0, self.sample_count, pmt.intern('rx_samp_count'), pmt.to_pmt(self.sample_count))
+	
         self.sample_count = self.sample_count + len(output_items[0])
         return len(output_items[0])

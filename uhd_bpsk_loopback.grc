@@ -40,6 +40,7 @@ blocks:
     const_points: digital.psk_2()[0]
     dims: '1'
     normalization: digital.constellation.AMPLITUDE_NORMALIZATION
+    npwr: '1.0'
     precision: '8'
     rot_sym: '2'
     soft_dec_lut: '''auto'''
@@ -59,6 +60,7 @@ blocks:
     const_points: digital.psk_2()[0]
     dims: '1'
     normalization: digital.constellation.AMPLITUDE_NORMALIZATION
+    npwr: '1.0'
     precision: '8'
     rot_sym: '2'
     soft_dec_lut: '''auto'''
@@ -250,7 +252,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '100'
+    value: '1000'
   states:
     bus_sink: false
     bus_source: false
@@ -262,7 +264,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '100'
+    value: '1000'
   states:
     bus_sink: false
     bus_source: false
@@ -425,7 +427,25 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1656, 728.0]
+    coordinate: [1656, 704.0]
+    rotation: 0
+    state: disabled
+- name: blocks_file_sink_0
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: /tmp/packet
+    type: complex
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [880, 436.0]
     rotation: 0
     state: disabled
 - name: blocks_message_debug_0
@@ -440,7 +460,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1304, 856.0]
+    coordinate: [1296, 944.0]
     rotation: 0
     state: disabled
 - name: blocks_message_debug_0_0
@@ -464,7 +484,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    const: '0.4'
+    const: '10'
     maxoutbuf: '0'
     minoutbuf: '0'
     type: complex
@@ -507,7 +527,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1656, 792.0]
+    coordinate: [1648, 880.0]
     rotation: 0
     state: disabled
 - name: blocks_throttle2_0
@@ -599,7 +619,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1760, 680.0]
+    coordinate: [1760, 752.0]
     rotation: 0
     state: enabled
 - name: epy_block_1
@@ -633,8 +653,8 @@ blocks:
       \   self.tx_fracs = time.get_real_secs() - int(time.get_real_secs())\n     \
       \       self.tx_time_set = True\n            \n            self.add_item_tag(0,\
       \ self.sample_count, pmt.intern('tx_time'), pmt.to_pmt((self.tx_secs, self.tx_fracs)))\n\
-      \n            print (f\"Tx time set to: {self.tx_secs + self.tx_fracs}\")\n\n\
-      \            pmt_msg = pmt.to_pmt(('tx_time', self.tx_secs+self.tx_fracs))\n\
+      \n            #print (f\"Tx time set to: {self.tx_secs + self.tx_fracs}\")\n\
+      \n            pmt_msg = pmt.to_pmt(('tx_time', self.tx_secs+self.tx_fracs))\n\
       \n            self.message_port_pub(pmt.intern(self.tx_time_out ), pmt_msg)\n\
       \        \n        # tagTuple = self.get_tags_in_window(0, 0, len(input_items[0]))\n\
       \n        # for tag in tagTuple:\n        #     print (\"Key: \" + pmt.to_python(tag.key)\
@@ -673,11 +693,11 @@ blocks:
       \   )\n        # if an attribute with the same name as a parameter is found,\n\
       \        # a callback is registered (properties work, too).\n        self.usrp\
       \ = usrp\n        self.sample_count = 0\n\n    def work(self, input_items, output_items):\n\
-      \        \"\"\"example: multiply with constant\"\"\"\n        time = self.usrp.get_time_now()\n\
-      \        rx_time = time.get_real_secs()\n        output_items[0][:] = input_items[0]\n\
-      \n        self.add_item_tag(0, self.sample_count, pmt.intern('rx_time2'), pmt.to_pmt(rx_time))\n\
-      \n        self.sample_count = self.sample_count + len(output_items[0])\n   \
-      \     return len(output_items[0])\n"
+      \        \"\"\"example: multiply with constant\"\"\"\n        #time = self.usrp.get_time_now()\n\
+      \        #rx_time = time.get_real_secs()\n        output_items[0][:] = input_items[0]\n\
+      \n        self.add_item_tag(0, self.sample_count, pmt.intern('rx_samp_count'),\
+      \ pmt.to_pmt(self.sample_count))\n\t\n        self.sample_count = self.sample_count\
+      \ + len(output_items[0])\n        return len(output_items[0])\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -691,7 +711,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [344, 668.0]
+    coordinate: [344, 604.0]
     rotation: 0
     state: enabled
 - name: epy_block_1_1_0
@@ -714,31 +734,42 @@ blocks:
       tx_time_in\"\n        self.reset = \"reset\"\n\n        self.message_port_register_in(pmt.intern(self.tx_time_in))\n\
       \        self.message_port_register_in(pmt.intern(self.reset))\n\n        self.set_msg_handler(pmt.intern(self.tx_time_in),\
       \ self.handle_msg)\n        self.set_msg_handler(pmt.intern(self.reset), self.handle_rst_msg)\n\
-      \n        self.tx_time_set = False\n        self.rx_time_set = False\n     \
-      \   self.corr_est_set = False\n\n        self.tx_time = []\n        self.rx_time\
-      \ = []\n        \n        self.pad_end = pad_end\n        self.pad_start = pad_start\n\
-      \n        self.id = 0\n\n    def handle_msg(self, msg):\n        tx_time = pmt.to_python(msg)\n\
-      \        if not self.tx_time_set:\n            self.tx_time = tx_time[1] + (self.pad_start/self.samp_rate)\n\
-      \            self.tx_time_set = True\n            # with open(\"./rx_tx_timestamps.csv\"\
+      \n        self.tx_time_set = False\n        self.rx_samp_count_set = False\n\
+      \        self.corr_time_set = False\n        self.frac_set = False\n\n     \
+      \   self.tx_time = []\n        self.rx_time = 0\n\n        self.pad_end = pad_end\n\
+      \        self.pad_start = pad_start\n        \n        with open(\"./rx_tx_timestamps.csv\"\
+      ,\"w\") as f:\n            f.write(\"id,tx_time, rx_samp_count, corr_index,\
+      \ frac_sample, rx_time, dt\\n\")\n\t     \n        self.id = 0\n\n    def handle_msg(self,\
+      \ msg):\n        tx_time = pmt.to_python(msg)\n        if not self.tx_time_set:\n\
+      \            self.tx_time = tx_time[1] + (self.pad_start/self.samp_rate)\n \
+      \           self.tx_time_set = True\n            # with open(\"./rx_tx_timestamps.csv\"\
       ,\"a\") as f:\n            #     f.write(f\"{self.id},t,{self.tx_time}\\n\"\
       )\n\n    def handle_rst_msg(self, msg):\n        reset_msg = pmt.to_python(msg)\n\
-      \        \n\n        if self.rx_time_set and reset_msg[1] == 1 and reset_msg[0]\
-      \ == 'reset':\n            self.rx_time_set = False\n            self.tx_time_set\
+      \        \n        if self.rx_samp_count_set and reset_msg[1] == 1 and reset_msg[0]\
+      \ == 'reset':\n            self.rx_samp_count_set = False\n            self.tx_time_set\
       \ = False\n\n            print (reset_msg)\n\n    def work(self, input_items,\
       \ output_items):\n        \"\"\"example: multiply with constant\"\"\"\n    \
       \    \n        self.sample_count = self.sample_count + len(input_items[0])\n\
       \        tagTuple = self.get_tags_in_window(0, 0, len(input_items[0]))\n\n \
-      \       if not self.rx_time_set:\n            for tag in tagTuple:\n       \
-      \         if pmt.to_python(tag.key) == \"corr_est\":\n                    self.corr_time\
-      \ = pmt.to_double(tag.value) * 2/ self.samp_rate\n\n                if pmt.to_python(tag.key)\
-      \ == \"rx_time2\":\n                    self.rx_time_set = True\n          \
-      \          self.rx_time = pmt.to_double(tag.value)\n\n                    if\
-      \ self.tx_time_set:\n                        with open(\"./rx_tx_timestamps.csv\"\
-      ,\"a\") as f:\n                            f.write(f\"{self.id},{self.tx_time},{self.rx_time},{self.corr_time},{self.rx_time\
-      \ - self.tx_time}\\n\")\n                            \n                    \
-      \    self.tx_time_set = False\n                        self.id = self.id + 1\n\
-      \n                        print (self.id)\n                        break\n\n\
-      \            \n        return len(input_items[0])\n"
+      \       if not self.rx_samp_count_set:\n            for tag in tagTuple:\n \
+      \               if pmt.to_python(tag.key) == \"rx_samp_count\" and not self.rx_samp_count_set:\n\
+      \                    self.rx_samp_count_set = True\n                    self.rx_samp_count\
+      \ = pmt.to_double(tag.value)\n            \n                if pmt.to_python(tag.key)\
+      \ == \"time_est2\" and not self.corr_time_set:\n                    self.corr_time_set\
+      \ = True                  \n                    #self.corr_time = (pmt.to_double(tag.value)\
+      \ * 2)/ self.samp_rate\n                    self.corr_time = pmt.to_double(tag.value)\n\
+      \n                if pmt.to_python(tag.key) == \"time_est3\" and not self.frac_set:\n\
+      \                    self.frac_set = True\n                    #self.corr_time\
+      \ = (pmt.to_double(tag.value) * 2)/ self.samp_rate\n                    self.frac\
+      \ = pmt.to_double(tag.value)\n            \n                print(tag.value)\n\
+      \            if self.tx_time_set and self.corr_time_set and self.frac_set:\n\
+      \                with open(\"./rx_tx_timestamps.csv\",\"a\") as f:\n       \
+      \             self.rx_time = (self.rx_samp_count + self.corr_time + self.frac)/\
+      \ 500e3 #self.rx_time - self.corr_time\n                    f.write(f\"{self.id},{self.tx_time},{self.rx_samp_count},{self.corr_time},{self.frac},{self.rx_time},{self.rx_time\
+      \ - self.tx_time}\\n\")\n                    \n                self.tx_time_set\
+      \ = False\n                self.corr_time_set = False\n                self.frac_set\
+      \ = False\n                self.id = self.id + 1\n            \n        return\
+      \ len(input_items[0])\n\n"
     affinity: ''
     alias: ''
     comment: ''
@@ -749,13 +780,13 @@ blocks:
     samp_rate: samp_rate
   states:
     _io_cache: ('Compare Timestamps', 'blk', [('samp_rate', '1000000.0'), ('pad_end',
-      '0'), ('pad_start', '0')], [('0', 'complex', 1), ('tx_time_in', 'message', 1),
-      ('reset', 'message', 1)], [], 'Embedded Python Block example - a simple multiply
-      const', ['pad_end', 'pad_start', 'samp_rate'])
+      '0'), ('pad_start', '0')], [('0', 'complex', 1), ('reset', 'message', 1), ('tx_time_in',
+      'message', 1)], [], 'Embedded Python Block example - a simple multiply const',
+      ['pad_end', 'pad_start', 'samp_rate'])
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1760, 608.0]
+    coordinate: [1688, 608.0]
     rotation: 0
     state: enabled
 - name: epy_block_1_1_0_0
@@ -848,7 +879,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1368, 720.0]
+    coordinate: [1360, 808.0]
     rotation: 0
     state: disabled
 - name: epy_block_1_1_0_0_0_0
@@ -891,7 +922,50 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1368, 804.0]
+    coordinate: [1360, 892.0]
+    rotation: 0
+    state: disabled
+- name: epy_block_1_1_0_0_0_0_0
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport pmt\nimport numpy\
+      \ as np\nfrom gnuradio import gr\n\n\nclass blk(gr.sync_block):  # other base\
+      \ classes are basic_block, decim_block, interp_block\n    \"\"\"Embedded Python\
+      \ Block example - a simple multiply const\"\"\"\n\n    def __init__(self, display_value=False):\
+      \  # only default arguments here\n        \"\"\"arguments to this function show\
+      \ up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n         \
+      \   self,\n            name='Tag Dump (Unique only)',   # will show up in GRC\n\
+      \            in_sig=[np.complex64],\n            out_sig=None\n        )\n \
+      \       # if an attribute with the same name as a parameter is found,\n    \
+      \    # a callback is registered (properties work, too).\n        self.tags =\
+      \ []\n        self.display_value = display_value\n    \n    def work(self, input_items,\
+      \ output_items):\n        \"\"\"example: multiply with constant\"\"\"\n    \
+      \    \n        tagTuple = self.get_tags_in_window(0, 0, len(input_items[0]))\n\
+      \n        for tag in tagTuple:\n            if pmt.to_python(tag.key) not in\
+      \ self.tags:\n                self.tags.append(pmt.to_python(tag.key))\n\n \
+      \               if self.display_value:\n                    print (\"Key: \"\
+      \ + pmt.to_python(tag.key) + \" \" + str(tag.offset) + \" \" + str(tag.value))\n\
+      \                else:\n                    print (\"Key: \" + pmt.to_python(tag.key))\n\
+      \n                #rtt = self.rx_time - self.tx_time\n                #print\
+      \ (f\"Rx time: {self.rx_time}\")\n                #print (f\"Tx time: {self.tx_time}\"\
+      )\n                #print (f\"\\n\\nRTT: {rtt}s\")\n        return 0\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    display_value: 'True'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Tag Dump (Unique only)', 'blk', [('display_value', 'False')], [('0',
+      'complex', 1)], [], 'Embedded Python Block example - a simple multiply const',
+      ['display_value'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1160, 812.0]
     rotation: 0
     state: disabled
 - name: import_0
@@ -1025,7 +1099,7 @@ blocks:
     tr_chan: '0'
     tr_delay: '0'
     tr_level: '0.1'
-    tr_mode: qtgui.TRIG_MODE_NORM
+    tr_mode: qtgui.TRIG_MODE_TAG
     tr_slope: qtgui.TRIG_SLOPE_POS
     tr_tag: '""'
     type: complex
@@ -1242,7 +1316,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1800, 796.0]
+    coordinate: [1792, 884.0]
     rotation: 0
     state: disabled
 - name: qtgui_time_sink_x_0_0_1
@@ -1498,8 +1572,8 @@ blocks:
     clock_source7: ''
     comment: ''
     dev_addr: '""'
-    dev_args: '"serial=31BADAB"'
-    gain0: tx_gain
+    dev_args: '"serial=31EABEA, underflow_polucy=next_packet"'
+    gain0: tx_gain-10
     gain1: '0'
     gain10: '0'
     gain11: '0'
@@ -1563,7 +1637,7 @@ blocks:
     gain_type7: default
     gain_type8: default
     gain_type9: default
-    len_tag_name: packet_len
+    len_tag_name: ''
     lo_export0: 'False'
     lo_export1: 'False'
     lo_export10: 'False'
@@ -1660,7 +1734,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1392, 316.0]
+    coordinate: [1368, 324.0]
     rotation: 0
     state: enabled
 - name: uhd_usrp_source_0
@@ -1839,8 +1913,8 @@ blocks:
     dc_offs_enb8: default
     dc_offs_enb9: default
     dev_addr: '""'
-    dev_args: '"serial=31BADAB"'
-    gain0: rx_gain
+    dev_args: '"serial=31EABEA"'
+    gain0: '35'
     gain1: '0'
     gain10: '0'
     gain11: '0'
@@ -2082,7 +2156,7 @@ blocks:
     start_time: '-1.0'
     stream_args: ''
     stream_chans: '[]'
-    sync: pc_clock
+    sync: pc_clock_next_pps
     time_source0: ''
     time_source1: ''
     time_source2: ''
@@ -2151,6 +2225,7 @@ blocks:
 
 connections:
 - [blocks_complex_to_mag_0, '0', qtgui_time_sink_x_0_0_0, '0']
+- [blocks_multiply_const_vxx_0, '0', blocks_file_sink_0, '0']
 - [blocks_multiply_const_vxx_0, '0', epy_block_1, '0']
 - [blocks_multiply_const_vxx_0, '0', qtgui_time_sink_x_0_0_1, '0']
 - [blocks_throttle2_0, '0', blocks_null_sink_0, '0']
@@ -2165,8 +2240,9 @@ connections:
 - [epy_block_1_1_0_0_0, '0', blocks_null_sink_1, '0']
 - [packet_rx_0, '0', epy_block_1_1_0, '0']
 - [packet_rx_0, '0', epy_block_1_1_0_0, '0']
-- [packet_rx_0, '3', epy_block_1_1_0_0_0, '0']
-- [packet_rx_0, '3', epy_block_1_1_0_0_0_0, '0']
+- [packet_rx_0, '1', epy_block_1_1_0_0_0, '0']
+- [packet_rx_0, '1', epy_block_1_1_0_0_0_0, '0']
+- [packet_rx_0, '4', epy_block_1_1_0_0_0_0_0, '0']
 - [packet_rx_0, precrc, epy_block_0, data_in]
 - [packet_tx_0, '0', blocks_multiply_const_vxx_0, '0']
 - [root_raised_cosine_filter_0, '0', packet_rx_0, '0']
@@ -2181,4 +2257,4 @@ connections:
 
 metadata:
   file_format: 1
-  grc_version: v3.11.0.0git-489-g76831245
+  grc_version: v3.11.0.0git-551-ge2f14775

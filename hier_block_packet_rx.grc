@@ -165,6 +165,44 @@ blocks:
     coordinate: [384, 316.0]
     rotation: 0
     state: enabled
+- name: blocks_tag_debug_0_0
+  id: blocks_tag_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    display: 'True'
+    filter: '"rx_time2"'
+    name: ''
+    num_inputs: '1'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1944, 356.0]
+    rotation: 0
+    state: disabled
+- name: blocks_tag_debug_0_0_0
+  id: blocks_tag_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    display: 'True'
+    filter: '"time_est2"'
+    name: ''
+    num_inputs: '1'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1944, 276.0]
+    rotation: 0
+    state: disabled
 - name: blocks_tagged_stream_multiply_length_0
   id: blocks_tagged_stream_multiply_length
   parameters:
@@ -193,6 +231,7 @@ blocks:
     constellation: pld_const
     maxoutbuf: '0'
     minoutbuf: '0'
+    npwr: '-1'
   states:
     bus_sink: false
     bus_source: false
@@ -209,6 +248,7 @@ blocks:
     constellation: hdr_const
     maxoutbuf: '0'
     minoutbuf: '0'
+    npwr: '-1'
   states:
     bus_sink: false
     bus_source: false
@@ -227,7 +267,7 @@ blocks:
     minoutbuf: '0'
     sps: sps
     symbols: modulated_sync_word
-    threshold: '0.9'
+    threshold: '0.9999'
     threshold_method: digital.THRESHOLD_ABSOLUTE
   states:
     bus_sink: false
@@ -423,6 +463,87 @@ blocks:
     coordinate: [1408, 11]
     rotation: 0
     state: enabled
+- name: epy_block_1_1
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport pmt\nimport numpy\
+      \ as np\nfrom gnuradio import gr\n\n\nclass blk(gr.sync_block):  # other base\
+      \ classes are basic_block, decim_block, interp_block\n    \"\"\"Embedded Python\
+      \ Block example - a simple multiply const\"\"\"\n\n    def __init__(self): \
+      \ # only default arguments here\n        \"\"\"arguments to this function show\
+      \ up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n         \
+      \   self,\n            name='Add RX Time Tag',   # will show up in GRC\n   \
+      \         in_sig=[np.complex64],\n            out_sig=[np.complex64]\n     \
+      \   )\n        # if an attribute with the same name as a parameter is found,\n\
+      \        # a callback is registered (properties work, too).\n        self.sample_count\
+      \ = 0\n\n    def work(self, input_items, output_items):\n        \"\"\"example:\
+      \ multiply with constant\"\"\"\n        #time = self.usrp.get_time_now()\n \
+      \       #rx_time = time.get_real_secs()\n        output_items[0][:] = input_items[0]\n\
+      \        \n        tagTuple = self.get_tags_in_window(0, 0, len(input_items[0]))\n\
+      \n        for tag in tagTuple:\n            if pmt.to_python(tag.key) == \"\
+      time_est\":\n                self.add_item_tag(0, self.sample_count, pmt.intern('time_est3s'),\
+      \ tag.value)\n\t\n        self.sample_count = self.sample_count + len(output_items[0])\n\
+      \        return len(output_items[0])\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Add RX Time Tag', 'blk', [], [('0', 'complex', 1)], [('0', 'complex',
+      1)], 'Embedded Python Block example - a simple multiply const', [])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [480, 252.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_1_1_0_0_0_0_0
+  id: epy_block
+  parameters:
+    _source_code: "\"\"\"\nEmbedded Python Blocks:\n\nEach time this file is saved,\
+      \ GRC will instantiate the first class it finds\nto get ports and parameters\
+      \ of your block. The arguments to __init__  will\nbe the parameters. All of\
+      \ them are required to have default values!\n\"\"\"\n\nimport pmt\nimport numpy\
+      \ as np\nfrom gnuradio import gr\n\n\nclass blk(gr.sync_block):  # other base\
+      \ classes are basic_block, decim_block, interp_block\n    \"\"\"Embedded Python\
+      \ Block example - a simple multiply const\"\"\"\n\n    def __init__(self, display_value=False):\
+      \  # only default arguments here\n        \"\"\"arguments to this function show\
+      \ up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n         \
+      \   self,\n            name='Tag Dump (Unique only)',   # will show up in GRC\n\
+      \            in_sig=[np.complex64],\n            out_sig=None\n        )\n \
+      \       # if an attribute with the same name as a parameter is found,\n    \
+      \    # a callback is registered (properties work, too).\n        self.tags =\
+      \ []\n        self.display_value = display_value\n    \n    def work(self, input_items,\
+      \ output_items):\n        \"\"\"example: multiply with constant\"\"\"\n    \
+      \    \n        tagTuple = self.get_tags_in_window(0, 0, len(input_items[0]))\n\
+      \n        for tag in tagTuple:\n            if pmt.to_python(tag.key) not in\
+      \ self.tags:\n                self.tags.append(pmt.to_python(tag.key))\n\n \
+      \               if self.display_value:\n                    print (\"Key: \"\
+      \ + pmt.to_python(tag.key) + \" \" + str(tag.offset) + \" \" + str(tag.value))\n\
+      \                else:\n                    print (\"Key: \" + pmt.to_python(tag.key))\n\
+      \n                #rtt = self.rx_time - self.tx_time\n                #print\
+      \ (f\"Rx time: {self.rx_time}\")\n                #print (f\"Tx time: {self.tx_time}\"\
+      )\n                #print (f\"\\n\\nRTT: {rtt}s\")\n        return 0\n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    display_value: 'False'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    _io_cache: ('Tag Dump (Unique only)', 'blk', [('display_value', 'False')], [('0',
+      'complex', 1)], [], 'Embedded Python Block example - a simple multiply const',
+      ['display_value'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1704, 76.0]
+    rotation: 0
+    state: disabled
 - name: fec_async_decoder_0
   id: fec_async_decoder
   parameters:
@@ -778,15 +899,18 @@ blocks:
     state: enabled
 
 connections:
-- [blocks_multiply_by_tag_value_cc_0, '0', digital_pfb_clock_sync_xxx_0, '0']
 - [blocks_multiply_by_tag_value_cc_0, '0', digital_symbol_sync_xx_0, '0']
+- [blocks_multiply_by_tag_value_cc_0, '0', epy_block_1_1, '0']
 - [blocks_tagged_stream_multiply_length_0, '0', pdu_tagged_stream_to_pdu_0, '0']
 - [digital_constellation_soft_decoder_cf_0, '0', blocks_tagged_stream_multiply_length_0,
   '0']
 - [digital_constellation_soft_decoder_cf_0_0, '0', fec_generic_decoder_0, '0']
 - [digital_corr_est_cc_0, '0', blocks_multiply_by_tag_value_cc_0, '0']
 - [digital_corr_est_cc_0, '1', pad_sink_7, '0']
+- [digital_costas_loop_cc_0_0, '0', blocks_tag_debug_0_0, '0']
+- [digital_costas_loop_cc_0_0, '0', blocks_tag_debug_0_0_0, '0']
 - [digital_costas_loop_cc_0_0, '0', digital_constellation_soft_decoder_cf_0_0, '0']
+- [digital_costas_loop_cc_0_0, '0', epy_block_1_1_0_0_0_0_0, '0']
 - [digital_costas_loop_cc_0_0, '0', pad_sink_2, '0']
 - [digital_costas_loop_cc_0_0_0, '0', digital_constellation_soft_decoder_cf_0, '0']
 - [digital_costas_loop_cc_0_0_0, '0', pad_sink_3_0, '0']
@@ -804,6 +928,7 @@ connections:
 - [digital_symbol_sync_xx_0, '0', digital_costas_loop_cc_0_0_0_0, '0']
 - [digital_symbol_sync_xx_0, '0', digital_header_payload_demux_0, '0']
 - [digital_symbol_sync_xx_0, '0', pad_sink_5, '0']
+- [epy_block_1_1, '0', digital_pfb_clock_sync_xxx_0, '0']
 - [fec_async_decoder_0, out, digital_crc_check_0, in]
 - [fec_generic_decoder_0, '0', digital_protocol_parser_b_0, '0']
 - [pad_source_0, '0', digital_corr_est_cc_0, '0']
@@ -811,4 +936,4 @@ connections:
 
 metadata:
   file_format: 1
-  grc_version: v3.11.0.0git-489-g76831245
+  grc_version: v3.11.0.0git-551-ge2f14775

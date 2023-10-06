@@ -7,7 +7,7 @@
 # GNU Radio Python Flow Graph
 # Title: BPSK Loopback
 # Author: harshad
-# GNU Radio version: v3.11.0.0git-489-g76831245
+# GNU Radio version: v3.11.0.0git-551-ge2f14775
 
 import os
 import sys
@@ -57,6 +57,7 @@ class uhd_bpsk_loopback(gr.top_block):
         ##################################################
         self.Const_PLD = Const_PLD = digital.constellation_calcdist(digital.psk_2()[0], digital.psk_2()[1],
         2, 1, digital.constellation.AMPLITUDE_NORMALIZATION).base()
+        self.Const_PLD.set_npwr(1.0)
         self.Const_PLD.gen_soft_dec_lut(8)
         self.sps = sps = 4
         self.samp_rate = samp_rate = 0.5e6
@@ -73,8 +74,8 @@ class uhd_bpsk_loopback(gr.top_block):
         self.rx_rrc_taps = rx_rrc_taps = firdes.root_raised_cosine(nfilts, nfilts*samp_rate,samp_rate / sps, eb, (11*sps*nfilts))
         self.rx_gain = rx_gain = 31
         self.pfs = pfs = sps*2+1
-        self.pad_start = pad_start = 100
-        self.pad_end = pad_end = 100
+        self.pad_start = pad_start = 1000
+        self.pad_end = pad_end = 1000
         self.lb = lb = 2*math.pi/sps/100
         self.frf = frf = eb
         self.freq = freq = 915
@@ -85,6 +86,7 @@ class uhd_bpsk_loopback(gr.top_block):
         self.amp = amp = 21.5
         self.Const_HDR = Const_HDR = digital.constellation_calcdist(digital.psk_2()[0], digital.psk_2()[1],
         2, 1, digital.constellation.AMPLITUDE_NORMALIZATION).base()
+        self.Const_HDR.set_npwr(1.0)
         self.Const_HDR.gen_soft_dec_lut(8)
 
         ##################################################
@@ -94,7 +96,7 @@ class uhd_bpsk_loopback(gr.top_block):
         self.zeromq_pull_msg_source_0_0 = zeromq.pull_msg_source('tcp://127.0.0.1:1237', 100, False)
         self.zeromq_pull_msg_source_0 = zeromq.pull_msg_source('tcp://127.0.0.1:1234', 100, False)
         self.uhd_usrp_source_0 = uhd.usrp_source(
-            ",".join(("", "serial=31BADAB")),
+            ",".join(("", "serial=31EABEA")),
             uhd.stream_args(
                 cpu_format="fc32",
                 args='',
@@ -102,26 +104,33 @@ class uhd_bpsk_loopback(gr.top_block):
             ),
         )
         self.uhd_usrp_source_0.set_samp_rate(samp_rate)
-        self.uhd_usrp_source_0.set_time_now(uhd.time_spec(time.time()), uhd.ALL_MBOARDS)
+        _last_pps_time = self.uhd_usrp_source_0.get_time_last_pps().get_real_secs()
+        # Poll get_time_last_pps() every 50 ms until a change is seen
+        while(self.uhd_usrp_source_0.get_time_last_pps().get_real_secs() == _last_pps_time):
+            time.sleep(0.05)
+        # Set the time to PC time on next PPS
+        self.uhd_usrp_source_0.set_time_next_pps(uhd.time_spec(int(time.time()) + 1.0))
+        # Sleep 1 second to ensure next PPS has come
+        time.sleep(1)
 
         self.uhd_usrp_source_0.set_center_freq(freq*1e6, 0)
         self.uhd_usrp_source_0.set_antenna("RX2", 0)
         self.uhd_usrp_source_0.set_rx_agc(True, 0)
         self.uhd_usrp_sink_0 = uhd.usrp_sink(
-            ",".join(("", "serial=31BADAB")),
+            ",".join(("", "serial=31EABEA, underflow_polucy=next_packet")),
             uhd.stream_args(
                 cpu_format="fc32",
                 args='',
                 channels=list(range(0,1)),
             ),
-            'packet_len',
+            '',
         )
         self.uhd_usrp_sink_0.set_samp_rate(samp_rate)
         self.uhd_usrp_sink_0.set_time_now(uhd.time_spec(time.time()), uhd.ALL_MBOARDS)
 
         self.uhd_usrp_sink_0.set_center_freq(freq * 1e6, 0)
         self.uhd_usrp_sink_0.set_antenna('TX/RX', 0)
-        self.uhd_usrp_sink_0.set_gain(tx_gain, 0)
+        self.uhd_usrp_sink_0.set_gain(tx_gain-10, 0)
         self.root_raised_cosine_filter_0 = filter.fir_filter_ccf(
             1,
             firdes.root_raised_cosine(
@@ -156,7 +165,7 @@ class uhd_bpsk_loopback(gr.top_block):
         self.epy_block_1 = epy_block_1.blk(delay=1)
         self.epy_block_0 = epy_block_0.blk(verbose=False)
         self.digital_fll_band_edge_cc_0 = digital.fll_band_edge_cc(sps, frf, pfs, lb)
-        self.blocks_multiply_const_vxx_0 = blocks.multiply_const_cc(0.4)
+        self.blocks_multiply_const_vxx_0 = blocks.multiply_const_cc(10)
 
 
         ##################################################
@@ -276,7 +285,7 @@ class uhd_bpsk_loopback(gr.top_block):
 
     def set_tx_gain(self, tx_gain):
         self.tx_gain = tx_gain
-        self.uhd_usrp_sink_0.set_gain(self.tx_gain, 0)
+        self.uhd_usrp_sink_0.set_gain(self.tx_gain-10, 0)
 
     def get_taps(self):
         return self.taps
