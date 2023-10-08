@@ -69,6 +69,60 @@ blocks:
     coordinate: [888, 540.0]
     rotation: 0
     state: enabled
+- name: blocks_file_sink_0
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: /tmp/tx_packet_hdr_1
+    type: complex
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [368, 380.0]
+    rotation: 0
+    state: enabled
+- name: blocks_file_sink_0_0
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: /tmp/tx_packet_pld_1
+    type: complex
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [368, 524.0]
+    rotation: 0
+    state: enabled
+- name: blocks_file_sink_0_0_0
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: /tmp/tx_packet
+    type: complex
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1248, 356.0]
+    rotation: 0
+    state: disabled
 - name: blocks_repack_bits_bb_0
   id: blocks_repack_bits_bb
   parameters:
@@ -125,7 +179,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1208, 472.0]
+    coordinate: [1232, 472.0]
     rotation: 0
     state: enabled
 - name: blocks_tagged_stream_mux_0
@@ -148,13 +202,32 @@ blocks:
     coordinate: [368, 456.0]
     rotation: 0
     state: enabled
+- name: blocks_vector_insert_x_0
+  id: blocks_vector_insert_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    offset: '0'
+    period: '100'
+    type: complex
+    vector: '[0, 0, 0]'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1072, 324.0]
+    rotation: 0
+    state: disabled
 - name: digital_burst_shaper_xx_0
   id: digital_burst_shaper_xx
   parameters:
     affinity: ''
     alias: ''
     comment: ''
-    insert_phasing: 'True'
+    insert_phasing: 'False'
     length_tag_name: packet_len
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -317,7 +390,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [320, 164.0]
+    coordinate: [304, 164.0]
     rotation: 0
     state: enabled
 - name: hdr_const
@@ -335,7 +408,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [552, 12.0]
+    coordinate: [560, 12.0]
     rotation: 0
     state: enabled
 - name: hdr_enc
@@ -431,7 +504,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1856, 484.0]
+    coordinate: [1560, 484.0]
     rotation: 0
     state: enabled
 - name: pad_sink_1
@@ -485,7 +558,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [768, 604.0]
+    coordinate: [880, 612.0]
     rotation: 0
     state: enabled
 - name: pad_source_0
@@ -564,11 +637,11 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    atten: '100'
+    atten: 100+150
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
-    nfilts: nfilts
+    nfilts: int(nfilts+4)
     rrate: sps
     samp_delay: filt_delay
     taps: psf_taps
@@ -579,7 +652,7 @@ blocks:
     bus_structure: null
     coordinate: [880, 444.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: pld_const
   id: parameter
   parameters:
@@ -612,7 +685,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [368, 11]
+    coordinate: [376, 12.0]
     rotation: 0
     state: enabled
 - name: psf_taps
@@ -630,6 +703,26 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [1240, 11]
+    rotation: 0
+    state: enabled
+- name: rational_resampler_xxx_0
+  id: rational_resampler_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    decim: '1'
+    fbw: '0.2'
+    interp: '4'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    taps: '[]'
+    type: ccc
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [888, 324.0]
     rotation: 0
     state: enabled
 - name: rx_mod_header
@@ -658,6 +751,27 @@ blocks:
     coordinate: [64, 492.0]
     rotation: 0
     state: enabled
+- name: sandia_utils_tag_debug_file_0
+  id: sandia_utils_tag_debug_file
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    display: 'True'
+    filename: /tmp/tx_packet
+    filewrite: 'True'
+    filter: '""'
+    name: ''
+    num_inputs: '1'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1504, 572.0]
+    rotation: 0
+    state: disabled
 - name: sps
   id: parameter
   parameters:
@@ -697,10 +811,12 @@ connections:
 - [blocks_repack_bits_bb_0, '0', digital_map_bb_1, '0']
 - [blocks_repack_bits_bb_0_0, '0', digital_map_bb_1_0, '0']
 - [blocks_tagged_stream_multiply_length_0, '0', pad_sink_0, '0']
+- [blocks_tagged_stream_multiply_length_0, '0', sandia_utils_tag_debug_file_0, '0']
 - [blocks_tagged_stream_mux_0, '0', digital_burst_shaper_xx_0, '0']
 - [blocks_tagged_stream_mux_0, '0', pad_sink_2, '0']
 - [digital_burst_shaper_xx_0, '0', pad_sink_3, '0']
 - [digital_burst_shaper_xx_0, '0', pfb_arb_resampler_xxx_0, '0']
+- [digital_burst_shaper_xx_0, '0', rational_resampler_xxx_0, '0']
 - [digital_chunks_to_symbols_xx_0, '0', mod_header, '0']
 - [digital_chunks_to_symbols_xx_0_0, '0', mod_payload, '0']
 - [digital_crc_append_0, out, fec_async_encoder_0, in]
@@ -714,10 +830,16 @@ connections:
 - [pad_source_0, out, digital_crc_append_0, in]
 - [pdu_pdu_to_tagged_stream_0, '0', blocks_repack_bits_bb_0_0, '0']
 - [pdu_pdu_to_tagged_stream_0_0, '0', blocks_repack_bits_bb_0, '0']
+- [pfb_arb_resampler_xxx_0, '0', blocks_file_sink_0_0_0, '0']
 - [pfb_arb_resampler_xxx_0, '0', blocks_tagged_stream_multiply_length_0, '0']
+- [pfb_arb_resampler_xxx_0, '0', blocks_vector_insert_x_0, '0']
+- [rational_resampler_xxx_0, '0', blocks_file_sink_0_0_0, '0']
+- [rational_resampler_xxx_0, '0', blocks_tagged_stream_multiply_length_0, '0']
+- [rx_mod_header, '0', blocks_file_sink_0, '0']
 - [rx_mod_header, '0', blocks_tagged_stream_mux_0, '0']
+- [rx_mod_payload, '0', blocks_file_sink_0_0, '0']
 - [rx_mod_payload, '0', blocks_tagged_stream_mux_0, '1']
 
 metadata:
   file_format: 1
-  grc_version: 3.10.7.0
+  grc_version: gfe42f6a4a

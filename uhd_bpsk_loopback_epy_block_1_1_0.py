@@ -67,8 +67,6 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
             self.rx_samp_count_set = False
             self.tx_time_set = False
 
-            print (reset_msg)
-
     def work(self, input_items, output_items):
         """example: multiply with constant"""
         
@@ -81,7 +79,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                     self.rx_samp_count_set = True
                     self.rx_samp_count = pmt.to_double(tag.value)
             
-                if pmt.to_python(tag.key) == "time_est2" and not self.corr_time_set:
+                if pmt.to_python(tag.key) == "corr_index" and not self.corr_time_set:
                     self.corr_time_set = True                  
                     #self.corr_time = (pmt.to_double(tag.value) * 2)/ self.samp_rate
                     self.corr_time = pmt.to_double(tag.value)
@@ -91,7 +89,8 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                     #self.corr_time = (pmt.to_double(tag.value) * 2)/ self.samp_rate
                     self.frac = pmt.to_double(tag.value)
             
-                print(tag.value)
+            print (self.tx_time_set, self.corr_time_set, self.frac_set)
+
             if self.tx_time_set and self.corr_time_set and self.frac_set:
                 with open("./rx_tx_timestamps.csv","a") as f:
                     self.rx_time = (self.rx_samp_count + self.corr_time + self.frac)/ 500e3 #self.rx_time - self.corr_time

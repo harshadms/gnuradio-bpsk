@@ -7,7 +7,7 @@
 # GNU Radio Python Flow Graph
 # Title: BPSK Loopback
 # Author: harshad
-# GNU Radio version: v3.11.0.0git-551-ge2f14775
+# GNU Radio version: gfe42f6a4a
 
 import os
 import sys
@@ -24,6 +24,7 @@ import signal
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
+from gnuradio import pdu
 from gnuradio import uhd
 import time
 from gnuradio import zeromq
@@ -74,12 +75,12 @@ class uhd_bpsk_loopback(gr.top_block):
         self.rx_rrc_taps = rx_rrc_taps = firdes.root_raised_cosine(nfilts, nfilts*samp_rate,samp_rate / sps, eb, (11*sps*nfilts))
         self.rx_gain = rx_gain = 31
         self.pfs = pfs = sps*2+1
-        self.pad_start = pad_start = 1000
-        self.pad_end = pad_end = 1000
+        self.pad_start = pad_start = 100
+        self.pad_end = pad_end = 100
         self.lb = lb = 2*math.pi/sps/100
         self.frf = frf = eb
         self.freq = freq = 915
-        self.enc_hdr = enc_hdr = fec.repetition_encoder_make(8000, rep)
+        self.enc_hdr = enc_hdr = fec.repetition_encoder_make(128, rep)
         self.enc = enc = fec.cc_encoder_make(8000,k, rate, polys, 0, fec.CC_TERMINATED, False)
         self.dec_hdr = dec_hdr = fec.repetition_decoder.make(hdr_format.header_nbits(),rep, 0.5)
         self.dec = dec = fec.cc_decoder.make(8000,k, rate, polys, 0, (-1), fec.CC_TERMINATED, False)
@@ -117,7 +118,7 @@ class uhd_bpsk_loopback(gr.top_block):
         self.uhd_usrp_source_0.set_antenna("RX2", 0)
         self.uhd_usrp_source_0.set_rx_agc(True, 0)
         self.uhd_usrp_sink_0 = uhd.usrp_sink(
-            ",".join(("", "serial=31EABEA, underflow_polucy=next_packet")),
+            ",".join(("", "serial=31EABEA, underflow_policy=next_packet")),
             uhd.stream_args(
                 cpu_format="fc32",
                 args='',
@@ -134,11 +135,12 @@ class uhd_bpsk_loopback(gr.top_block):
         self.root_raised_cosine_filter_0 = filter.fir_filter_ccf(
             1,
             firdes.root_raised_cosine(
-                (amp/5),
+                2,
                 samp_rate,
                 (samp_rate/sps),
                 eb,
                 (11*sps)))
+        self.pdu_pdu_to_stream_x_0 = pdu.pdu_to_stream_b(pdu.EARLY_BURST_APPEND, 64)
         self.packet_tx_0 = packet_tx(
             hdr_const=Const_HDR,
             hdr_enc=enc_hdr,
@@ -165,7 +167,9 @@ class uhd_bpsk_loopback(gr.top_block):
         self.epy_block_1 = epy_block_1.blk(delay=1)
         self.epy_block_0 = epy_block_0.blk(verbose=False)
         self.digital_fll_band_edge_cc_0 = digital.fll_band_edge_cc(sps, frf, pfs, lb)
-        self.blocks_multiply_const_vxx_0 = blocks.multiply_const_cc(10)
+        self.blocks_multiply_const_vxx_0 = blocks.multiply_const_cc(5)
+        self.blocks_file_sink_0_0 = blocks.file_sink(gr.sizeof_char*1, '/tmp/payload_bytes', False)
+        self.blocks_file_sink_0_0.set_unbuffered(False)
 
 
         ##################################################
@@ -173,6 +177,7 @@ class uhd_bpsk_loopback(gr.top_block):
         ##################################################
         self.msg_connect((self.epy_block_1, 'tx_time_out'), (self.epy_block_1_1_0, 'tx_time_in'))
         self.msg_connect((self.packet_rx_0, 'precrc'), (self.epy_block_0, 'data_in'))
+        self.msg_connect((self.packet_rx_0, 'precrc'), (self.pdu_pdu_to_stream_x_0, 'pdus'))
         self.msg_connect((self.zeromq_pull_msg_source_0, 'out'), (self.packet_tx_0, 'in'))
         self.msg_connect((self.zeromq_pull_msg_source_0_0, 'out'), (self.epy_block_0, 'cmd_in'))
         self.msg_connect((self.zeromq_pull_msg_source_0_0, 'out'), (self.epy_block_1, 'reset'))
@@ -183,6 +188,7 @@ class uhd_bpsk_loopback(gr.top_block):
         self.connect((self.epy_block_1_1, 0), (self.digital_fll_band_edge_cc_0, 0))
         self.connect((self.packet_rx_0, 0), (self.epy_block_1_1_0, 0))
         self.connect((self.packet_tx_0, 0), (self.blocks_multiply_const_vxx_0, 0))
+        self.connect((self.pdu_pdu_to_stream_x_0, 0), (self.blocks_file_sink_0_0, 0))
         self.connect((self.root_raised_cosine_filter_0, 0), (self.packet_rx_0, 0))
         self.connect((self.uhd_usrp_source_0, 0), (self.epy_block_1_1, 0))
 
@@ -207,7 +213,7 @@ class uhd_bpsk_loopback(gr.top_block):
         self.set_tx_rrc_taps(firdes.root_raised_cosine(self.nfilts, self.nfilts, 1.0, self.eb, (11*self.sps*self.nfilts)))
         self.packet_rx_0.set_sps(self.sps)
         self.packet_tx_0.set_sps(self.sps)
-        self.root_raised_cosine_filter_0.set_taps(firdes.root_raised_cosine((self.amp/5), self.samp_rate, (self.samp_rate/self.sps), self.eb, (11*self.sps)))
+        self.root_raised_cosine_filter_0.set_taps(firdes.root_raised_cosine(2, self.samp_rate, (self.samp_rate/self.sps), self.eb, (11*self.sps)))
 
     def get_samp_rate(self):
         return self.samp_rate
@@ -217,7 +223,7 @@ class uhd_bpsk_loopback(gr.top_block):
         self.set_rx_rrc_taps(firdes.root_raised_cosine(self.nfilts, self.nfilts*self.samp_rate, self.samp_rate / self.sps, self.eb, (11*self.sps*self.nfilts)))
         self.set_taps(firdes.root_raised_cosine(1.0,self.samp_rate,self.samp_rate/self.sps,self.eb,11*self.sps))
         self.epy_block_1_1_0.samp_rate = self.samp_rate
-        self.root_raised_cosine_filter_0.set_taps(firdes.root_raised_cosine((self.amp/5), self.samp_rate, (self.samp_rate/self.sps), self.eb, (11*self.sps)))
+        self.root_raised_cosine_filter_0.set_taps(firdes.root_raised_cosine(2, self.samp_rate, (self.samp_rate/self.sps), self.eb, (11*self.sps)))
         self.uhd_usrp_sink_0.set_samp_rate(self.samp_rate)
         self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
 
@@ -271,7 +277,7 @@ class uhd_bpsk_loopback(gr.top_block):
         self.set_taps(firdes.root_raised_cosine(1.0,self.samp_rate,self.samp_rate/self.sps,self.eb,11*self.sps))
         self.set_tx_rrc_taps(firdes.root_raised_cosine(self.nfilts, self.nfilts, 1.0, self.eb, (11*self.sps*self.nfilts)))
         self.packet_rx_0.set_eb(self.eb)
-        self.root_raised_cosine_filter_0.set_taps(firdes.root_raised_cosine((self.amp/5), self.samp_rate, (self.samp_rate/self.sps), self.eb, (11*self.sps)))
+        self.root_raised_cosine_filter_0.set_taps(firdes.root_raised_cosine(2, self.samp_rate, (self.samp_rate/self.sps), self.eb, (11*self.sps)))
 
     def get_tx_rrc_taps(self):
         return self.tx_rrc_taps
@@ -382,7 +388,6 @@ class uhd_bpsk_loopback(gr.top_block):
 
     def set_amp(self, amp):
         self.amp = amp
-        self.root_raised_cosine_filter_0.set_taps(firdes.root_raised_cosine((self.amp/5), self.samp_rate, (self.samp_rate/self.sps), self.eb, (11*self.sps)))
 
     def get_Const_HDR(self):
         return self.Const_HDR

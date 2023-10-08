@@ -38,29 +38,28 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
     def handle_data(self, msg):
         a = pmt.to_python(msg)
 
-        
-        chars = a[1]
+        # chars = a[1]
 
-        string_ = []
-        for i in chars:
-            if i == 35:
-                if self.verbose:
-                    print (chars)
-                    string_.append("<ETX>")
+        # string_ = []
+        # for i in chars:
+        #     if i == 35:
+        #         if self.verbose:
+        #             print (chars)
+        #             string_.append("<ETX>")
 
-                break
+        #         break
             
-            string_.append(chr(i))
+        #     string_.append(chr(i))
         
-        string_ = ''.join(string_)
+        # string_ = ''.join(string_)
 
-        if "Testing" in string_:
-            self.cnt = self.cnt + 1
+        # if "Testing" in string_:
+        self.cnt = self.cnt + 1
 
-        if not self.verbose:
-            string_ = string_.split("<ETX>")[0]
+        # if not self.verbose:
+        #     string_ = string_.split("<ETX>")[0]
 
-        print (f"Rx message: {string_}")
+        print (f"Rx message: {a[1]}")
     
     def handle_cmd(self, msg):
         msg = pmt.to_python(msg)
@@ -77,7 +76,6 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         if cmd == 1:
             print ("Count = %d/%d" % (self.cnt, test))
             self.cnt = 0
-                   
 
     def work(self, input_items, output_items):
         """example: multiply with constant"""

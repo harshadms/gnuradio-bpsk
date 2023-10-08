@@ -41,34 +41,52 @@ slp = 1
 
 #while 1:
 
-for i in trange(limit):
-    if not repeat:
-        ch = "Testing-123456789"
-        cnt = cnt + 1
-    else:
+if not repeat:
+    for i in trange(limit):
+        if not repeat:
+            ch = "Testing-123456789"
+            cnt = cnt + 1
+        else:
+            ch = input("Enter message: ")
+        
+        if ch == 'q':
+            break
+        
+        
+        vec = np.array([ord(c) for c in ch], np.uint8)
+        vec = np.insert(vec, len(vec), 35)
+
+        push_sock.send(pmt.serialize_str(pmt.cons(pmt.make_dict(), pmt.pmt_to_python.numpy_to_uvector(vec))))
+
+        time.sleep(1.1)
+        
+        push_cmd_sock.send(pmt.serialize_str(pmt.to_pmt(('reset',1))))
+
+        #time.sleep(0.5)
+        
+        # if not repeat and cnt >= limit:
+        #     break
+
+        #slp = slp + 1
+else:
+    while 1:
         ch = input("Enter message: ")
-    
-    if ch == 'q':
-        break
-    
-    
-    vec = np.array([ord(c) for c in ch], np.uint8)
-    vec = np.insert(vec, len(vec), 35)
 
-    push_sock.send(pmt.serialize_str(pmt.cons(pmt.make_dict(), pmt.pmt_to_python.numpy_to_uvector(vec))))
+        if ch == 'q':
+            break
+        
+        ch = "Testing-123456789"
 
-    time.sleep(1.1)
+        vec = np.array([ord(c) for c in ch], np.uint8)
+        vec = np.insert(vec, len(vec), 35)
+
+        push_sock.send(pmt.serialize_str(pmt.cons(pmt.make_dict(), pmt.pmt_to_python.numpy_to_uvector(vec))))
+
+        time.sleep(1.1)
+        
+        push_cmd_sock.send(pmt.serialize_str(pmt.to_pmt(('reset',1))))
     
-    push_cmd_sock.send(pmt.serialize_str(pmt.to_pmt(('reset',1))))
-
-    #time.sleep(0.5)
-    
-    # if not repeat and cnt >= limit:
-    #     break
-
-    #slp = slp + 1
-
 push_sock.close()
 
 # Send status report message to receiver
-#push_cmd_sock.send(pmt.serialize_str(pmt.cons(pmt.make_dict(), pmt.pmt_to_python.numpy_to_uvector(np.array([np.uint8(1), np.uint8(limit)])))))
+push_cmd_sock.send(pmt.serialize_str(pmt.cons(pmt.make_dict(), pmt.pmt_to_python.numpy_to_uvector(np.array([np.uint8(1), np.uint8(limit)])))))
