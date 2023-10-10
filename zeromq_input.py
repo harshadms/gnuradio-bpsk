@@ -94,7 +94,7 @@ else:
         if ch == 'q':
             break
         
-        ch = "Testing-123456789"
+        #ch = "Testing-123456789"
 
         vec = np.array([ord(c) for c in ch], np.uint8)
         
