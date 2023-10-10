@@ -13,7 +13,7 @@ from gnuradio import gr
 class blk(gr.sync_block):  # other base classes are basic_block, decim_block, interp_block
     """Embedded Python Block example - a simple multiply const"""
 
-    def __init__(self, verbose=False):  # only default arguments here
+    def __init__(self, verbose=False, addr=1):  # only default arguments here
         """arguments to this function show up as parameters in GRC"""
         gr.sync_block.__init__(
             self,
@@ -23,7 +23,8 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
         )
         self.data_in = "data_in"
         self.cmd_in = "cmd_in"
-        
+        self.addr = addr
+
         self.message_port_register_in(pmt.intern(self.cmd_in ))
         self.message_port_register_in(pmt.intern(self.data_in ))
 
@@ -43,6 +44,9 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
 
         addr = 256*addr[0]+addr[1]
 
+        if addr == self.addr:
+            return
+        
         string_ = []
         for i in chars[2:]:
             if i == 35:

@@ -705,33 +705,35 @@ blocks:
       \ them are required to have default values!\n\"\"\"\nimport pmt\nimport numpy\
       \ as np\nfrom gnuradio import gr\n\n\nclass blk(gr.sync_block):  # other base\
       \ classes are basic_block, decim_block, interp_block\n    \"\"\"Embedded Python\
-      \ Block example - a simple multiply const\"\"\"\n\n    def __init__(self, verbose=False):\
-      \  # only default arguments here\n        \"\"\"arguments to this function show\
-      \ up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n         \
-      \   self,\n            name='Py Message Parser',   # will show up in GRC\n \
-      \           in_sig=None,\n            out_sig=None\n        )\n        self.data_in\
-      \ = \"data_in\"\n        self.cmd_in = \"cmd_in\"\n        \n        self.message_port_register_in(pmt.intern(self.cmd_in\
-      \ ))\n        self.message_port_register_in(pmt.intern(self.data_in ))\n\n \
-      \       self.set_msg_handler(pmt.intern(self.data_in), self.handle_data)\n \
-      \       self.set_msg_handler(pmt.intern(self.cmd_in), self.handle_cmd)\n\n \
-      \       self.verbose = verbose\n        # if an attribute with the same name\
+      \ Block example - a simple multiply const\"\"\"\n\n    def __init__(self, verbose=False,\
+      \ addr=1):  # only default arguments here\n        \"\"\"arguments to this function\
+      \ show up as parameters in GRC\"\"\"\n        gr.sync_block.__init__(\n    \
+      \        self,\n            name='Py Message Parser',   # will show up in GRC\n\
+      \            in_sig=None,\n            out_sig=None\n        )\n        self.data_in\
+      \ = \"data_in\"\n        self.cmd_in = \"cmd_in\"\n        self.addr = addr\n\
+      \n        self.message_port_register_in(pmt.intern(self.cmd_in ))\n        self.message_port_register_in(pmt.intern(self.data_in\
+      \ ))\n\n        self.set_msg_handler(pmt.intern(self.data_in), self.handle_data)\n\
+      \        self.set_msg_handler(pmt.intern(self.cmd_in), self.handle_cmd)\n\n\
+      \        self.verbose = verbose\n        # if an attribute with the same name\
       \ as a parameter is found,\n        # a callback is registered (properties work,\
       \ too).\n        self.cnt = 0\n\n    def handle_data(self, msg):\n        a\
       \ = pmt.to_python(msg)\n\n        chars = a[1]\n        addr = chars[:2]\n\n\
-      \        addr = 256*addr[0]+addr[1]\n\n        string_ = []\n        for i in\
-      \ chars[2:]:\n            if i == 35:\n                if self.verbose:\n  \
-      \                  print (chars)\n                    string_.append(\"<ETX>\"\
-      )\n\n                break\n            \n            string_.append(chr(i))\n\
-      \        \n        string_ = ''.join(string_)\n\n        # if \"Testing\" in\
-      \ string_:\n        self.cnt = self.cnt + 1\n\n        # if not self.verbose:\n\
-      \        #     string_ = string_.split(\"<ETX>\")[0]\n        \n        print\
-      \ (f\"Rx message from {addr}: {a[1]}\")\n    \n    def handle_cmd(self, msg):\n\
-      \        msg = pmt.to_python(msg)\n\n    def handle_cmd(self, msg):\n      \
-      \  msg = pmt.to_python(msg)\n        \n        try:\n            cmd = msg[1][0]\n\
+      \        addr = 256*addr[0]+addr[1]\n\n        if addr == self.addr:\n     \
+      \       return\n        \n        string_ = []\n        for i in chars[2:]:\n\
+      \            if i == 35:\n                if self.verbose:\n               \
+      \     print (chars)\n                    string_.append(\"<ETX>\")\n\n     \
+      \           break\n            \n            string_.append(chr(i))\n      \
+      \  \n        string_ = ''.join(string_)\n\n        # if \"Testing\" in string_:\n\
+      \        self.cnt = self.cnt + 1\n\n        # if not self.verbose:\n       \
+      \ #     string_ = string_.split(\"<ETX>\")[0]\n        \n        print (f\"\
+      Rx message from {addr}: {a[1]}\")\n    \n    def handle_cmd(self, msg):\n  \
+      \      msg = pmt.to_python(msg)\n\n    def handle_cmd(self, msg):\n        msg\
+      \ = pmt.to_python(msg)\n        \n        try:\n            cmd = msg[1][0]\n\
       \            test = int(msg[1][1])\n        except:\n            return\n\n\
       \        if cmd == 1:\n            print (\"Count = %d/%d\" % (self.cnt, test))\n\
       \            self.cnt = 0\n\n    def work(self, input_items, output_items):\n\
       \        \"\"\"example: multiply with constant\"\"\"\n        pass\n"
+    addr: '1'
     affinity: ''
     alias: ''
     comment: ''
@@ -739,9 +741,9 @@ blocks:
     minoutbuf: '0'
     verbose: 'False'
   states:
-    _io_cache: ('Py Message Parser', 'blk', [('verbose', 'False')], [('data_in', 'message',
-      1), ('cmd_in', 'message', 1)], [], 'Embedded Python Block example - a simple
-      multiply const', ['verbose'])
+    _io_cache: ('Py Message Parser', 'blk', [('verbose', 'False'), ('addr', '1')],
+      [('data_in', 'message', 1), ('cmd_in', 'message', 1)], [], 'Embedded Python
+      Block example - a simple multiply const', ['addr', 'verbose'])
     bus_sink: false
     bus_source: false
     bus_structure: null

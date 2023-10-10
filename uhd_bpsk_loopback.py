@@ -165,7 +165,7 @@ class uhd_bpsk_loopback(gr.top_block):
         self.epy_block_1_1_0 = epy_block_1_1_0.blk(samp_rate=samp_rate, pad_end=pad_end, pad_start=pad_start)
         self.epy_block_1_1 = epy_block_1_1.blk(usrp=0)
         self.epy_block_1 = epy_block_1.blk(delay=1)
-        self.epy_block_0 = epy_block_0.blk(verbose=False)
+        self.epy_block_0 = epy_block_0.blk(verbose=False, addr=1)
         self.digital_fll_band_edge_cc_0 = digital.fll_band_edge_cc(sps, frf, pfs, lb)
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_cc(5)
         self.blocks_file_sink_0_0 = blocks.file_sink(gr.sizeof_char*1, '/tmp/payload_bytes', False)
