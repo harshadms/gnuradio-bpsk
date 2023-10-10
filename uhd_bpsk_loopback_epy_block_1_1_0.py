@@ -89,7 +89,7 @@ class blk(gr.sync_block):  # other base classes are basic_block, decim_block, in
                     #self.corr_time = (pmt.to_double(tag.value) * 2)/ self.samp_rate
                     self.frac = pmt.to_double(tag.value)
             
-            print (self.tx_time_set, self.corr_time_set, self.frac_set)
+            #print (self.tx_time_set, self.corr_time_set, self.frac_set)
 
             if self.tx_time_set and self.corr_time_set and self.frac_set:
                 with open("./rx_tx_timestamps.csv","a") as f:

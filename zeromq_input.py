@@ -10,6 +10,12 @@
 # GNU Radio version: v3.11.0.0git-489-g76831245
 
 # zmq_PUSH_PULL_server.py
+
+'''
+ Packet payload 
+ | 2 bytes addr | 46 bytes data - append 0s otherwise |
+'''
+
 import sys
 import pmt
 import zmq
@@ -41,6 +47,9 @@ slp = 1
 
 #while 1:
 
+# Change address to any 16 bit integer (2 uint8 values)
+addr = divmod(1, 1<<8)
+
 if not repeat:
     for i in trange(limit):
         if not repeat:
@@ -54,7 +63,17 @@ if not repeat:
         
         
         vec = np.array([ord(c) for c in ch], np.uint8)
+        
+        # Add address
+        vec = np.insert(vec, 0, addr)
+
+        # ETX character
         vec = np.insert(vec, len(vec), 35)
+
+        # Zero padding
+        vec = np.insert(vec, len(vec), np.zeros(46-len(vec)))
+
+        print (f"Sending: {vec}")
 
         push_sock.send(pmt.serialize_str(pmt.cons(pmt.make_dict(), pmt.pmt_to_python.numpy_to_uvector(vec))))
 
@@ -78,7 +97,17 @@ else:
         ch = "Testing-123456789"
 
         vec = np.array([ord(c) for c in ch], np.uint8)
+        
+        # Add address
+        vec = np.insert(vec, 0, addr)
+
+        # ETX character
         vec = np.insert(vec, len(vec), 35)
+
+        # Zero padding
+        vec = np.insert(vec, len(vec), np.zeros(46-len(vec)))
+
+        print (f"Sending: {vec}")
 
         push_sock.send(pmt.serialize_str(pmt.cons(pmt.make_dict(), pmt.pmt_to_python.numpy_to_uvector(vec))))
 

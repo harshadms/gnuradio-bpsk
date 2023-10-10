@@ -717,19 +717,20 @@ blocks:
       \       self.verbose = verbose\n        # if an attribute with the same name\
       \ as a parameter is found,\n        # a callback is registered (properties work,\
       \ too).\n        self.cnt = 0\n\n    def handle_data(self, msg):\n        a\
-      \ = pmt.to_python(msg)\n\n        # chars = a[1]\n\n        # string_ = []\n\
-      \        # for i in chars:\n        #     if i == 35:\n        #         if\
-      \ self.verbose:\n        #             print (chars)\n        #            \
-      \ string_.append(\"<ETX>\")\n\n        #         break\n            \n     \
-      \   #     string_.append(chr(i))\n        \n        # string_ = ''.join(string_)\n\
-      \n        # if \"Testing\" in string_:\n        self.cnt = self.cnt + 1\n\n\
-      \        # if not self.verbose:\n        #     string_ = string_.split(\"<ETX>\"\
-      )[0]\n\n        print (f\"Rx message: {a[1]}\")\n    \n    def handle_cmd(self,\
-      \ msg):\n        msg = pmt.to_python(msg)\n\n    def handle_cmd(self, msg):\n\
-      \        msg = pmt.to_python(msg)\n        \n        try:\n            cmd =\
-      \ msg[1][0]\n            test = int(msg[1][1])\n        except:\n          \
-      \  return\n\n        if cmd == 1:\n            print (\"Count = %d/%d\" % (self.cnt,\
-      \ test))\n            self.cnt = 0\n\n    def work(self, input_items, output_items):\n\
+      \ = pmt.to_python(msg)\n\n        chars = a[1]\n        addr = chars[:2]\n\n\
+      \        addr = 256*addr[0]+addr[1]\n\n        string_ = []\n        for i in\
+      \ chars[2:]:\n            if i == 35:\n                if self.verbose:\n  \
+      \                  print (chars)\n                    string_.append(\"<ETX>\"\
+      )\n\n                break\n            \n            string_.append(chr(i))\n\
+      \        \n        string_ = ''.join(string_)\n\n        # if \"Testing\" in\
+      \ string_:\n        self.cnt = self.cnt + 1\n\n        # if not self.verbose:\n\
+      \        #     string_ = string_.split(\"<ETX>\")[0]\n        \n        print\
+      \ (f\"Rx message from {addr}: {a[1]}\")\n    \n    def handle_cmd(self, msg):\n\
+      \        msg = pmt.to_python(msg)\n\n    def handle_cmd(self, msg):\n      \
+      \  msg = pmt.to_python(msg)\n        \n        try:\n            cmd = msg[1][0]\n\
+      \            test = int(msg[1][1])\n        except:\n            return\n\n\
+      \        if cmd == 1:\n            print (\"Count = %d/%d\" % (self.cnt, test))\n\
+      \            self.cnt = 0\n\n    def work(self, input_items, output_items):\n\
       \        \"\"\"example: multiply with constant\"\"\"\n        pass\n"
     affinity: ''
     alias: ''
@@ -913,7 +914,7 @@ blocks:
       \n                if pmt.to_python(tag.key) == \"time_est3\" and not self.frac_set:\n\
       \                    self.frac_set = True\n                    #self.corr_time\
       \ = (pmt.to_double(tag.value) * 2)/ self.samp_rate\n                    self.frac\
-      \ = pmt.to_double(tag.value)\n            \n            print (self.tx_time_set,\
+      \ = pmt.to_double(tag.value)\n            \n            #print (self.tx_time_set,\
       \ self.corr_time_set, self.frac_set)\n\n            if self.tx_time_set and\
       \ self.corr_time_set and self.frac_set:\n                with open(\"./rx_tx_timestamps.csv\"\
       ,\"a\") as f:\n                    self.rx_time = (self.rx_samp_count + self.corr_time\

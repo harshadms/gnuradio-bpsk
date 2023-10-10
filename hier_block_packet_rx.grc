@@ -271,7 +271,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1184, 640.0]
+    coordinate: [1352, 600.0]
     rotation: 180
     state: enabled
 - name: digital_constellation_soft_decoder_cf_0
@@ -343,7 +343,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1176, 192.0]
+    coordinate: [1152, 200.0]
     rotation: 0
     state: enabled
 - name: digital_costas_loop_cc_0_0_0
@@ -940,7 +940,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1176, 716.0]
+    coordinate: [1160, 716.0]
     rotation: 0
     state: enabled
 - name: pld_const
