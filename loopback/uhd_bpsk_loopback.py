@@ -115,7 +115,7 @@ class uhd_bpsk_loopback(gr.top_block):
         time.sleep(1)
 
         self.uhd_usrp_source_0.set_center_freq(freq*1e6, 0)
-        self.uhd_usrp_source_0.set_antenna("RX2", 0)
+        self.uhd_usrp_source_0.set_antenna("TX/RX", 0)
         self.uhd_usrp_source_0.set_rx_agc(True, 0)
         self.uhd_usrp_sink_0 = uhd.usrp_sink(
             ",".join(("", "serial=31EABEA, underflow_policy=next_packet")),

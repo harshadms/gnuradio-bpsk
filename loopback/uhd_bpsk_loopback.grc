@@ -936,9 +936,9 @@ blocks:
     samp_rate: samp_rate
   states:
     _io_cache: ('Compare Timestamps', 'blk', [('samp_rate', '1000000.0'), ('pad_end',
-      '0'), ('pad_start', '0')], [('0', 'complex', 1), ('tx_time_in', 'message', 1),
-      ('reset', 'message', 1)], [], 'Embedded Python Block example - a simple multiply
-      const', ['pad_end', 'pad_start', 'samp_rate'])
+      '0'), ('pad_start', '0')], [('0', 'complex', 1), ('reset', 'message', 1), ('tx_time_in',
+      'message', 1)], [], 'Embedded Python Block example - a simple multiply const',
+      ['pad_end', 'pad_start', 'samp_rate'])
     bus_sink: false
     bus_source: false
     bus_structure: null
@@ -1962,7 +1962,7 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    ant0: '"RX2"'
+    ant0: '"TX/RX"'
     ant1: '"RX2"'
     ant10: '"RX2"'
     ant11: '"RX2"'
